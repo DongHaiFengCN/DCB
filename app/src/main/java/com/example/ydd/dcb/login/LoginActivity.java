@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         setContentView(R.layout.activity_login);
 
 
-        //关闭测试#6
+        //reopen测试#5
 
 
         //获取文件读写权限
