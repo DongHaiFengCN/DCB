@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.donghaifeng.myapplication.MainActivity">
+
+
+    <item
+        android:id="@+id/action_rebind"
+        android:title="绑定设备"
+        android:showAsAction="always"
+        />
+
+
+</menu>

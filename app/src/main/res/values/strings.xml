@@ -1,0 +1,7 @@
+<resources>
+    <string name="login_remember">记住登录信息</string>
+    <string name="login_name">员工号/手机号</string>
+    <string name="login_paw">密码</string>
+    <string name="manager_telephone_number">管理员电话</string>
+    <string name="manager_password">管理员密码</string>
+</resources>

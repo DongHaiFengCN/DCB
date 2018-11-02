@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/email_login_form"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/margin_8"
+    android:layout_marginTop="@dimen/margin_8"
+    android:layout_marginRight="@dimen/margin_8"
+    android:orientation="vertical">
+
+
+    <EditText
+        android:id="@+id/name_et"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:drawablePadding="@dimen/padding_16"
+        android:inputType="phone"
+        android:maxLength="11"
+        android:maxLines="1"
+        android:text="17605413611"
+        android:hint="@string/login_name"
+        android:paddingLeft="@dimen/padding_16"
+        android:paddingRight="@dimen/padding_16"
+        android:singleLine="true" />
+    <EditText
+        android:id="@+id/password_et"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:drawablePadding="@dimen/padding_16"
+        android:hint="@string/login_paw"
+        android:imeActionId="6"
+        android:imeOptions="actionUnspecified"
+        android:inputType="textPassword"
+        android:maxLength="16"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/padding_16"
+        android:paddingRight="@dimen/padding_16"
+        android:singleLine="true" />
+
+    <CheckBox
+        android:id="@+id/remember_ck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_8"
+        android:gravity="center"
+        android:text="@string/login_remember" />
+
+    <Button
+        android:id="@+id/submit_bt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_8"
+        android:layout_marginTop="@dimen/margin_8"
+        android:layout_marginRight="@dimen/margin_8"
+        android:textStyle="bold" />
+
+</LinearLayout>
