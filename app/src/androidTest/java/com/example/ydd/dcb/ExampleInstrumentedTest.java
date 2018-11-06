@@ -23,4 +23,17 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.example.ydd.dcb", appContext.getPackageName());
     }
+
+    @Test
+    public void test() {
+
+/*        QueryWithSingleConditional<String,String> queryWithSingleConditional = new QueryWithSingleConditional<>("1", "4");
+
+        queryWithSingleConditional.generate();*/
+
+
+
+
+
+    }
 }

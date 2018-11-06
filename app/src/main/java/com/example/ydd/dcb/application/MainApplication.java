@@ -1,12 +1,13 @@
 package com.example.ydd.dcb.application;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 
+import com.example.ydd.common.tools.Util;
+import com.example.ydd.common.lite.common.CDLFactory;
 import com.squareup.leakcanary.LeakCanary;
 
-import static com.example.ydd.common.Util.verifyConfiguration;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -28,6 +29,10 @@ public class MainApplication extends Application {
      */
     public static boolean configurationExist = false;
 
+    public CDLFactory cdlFactory;
+
+    private CDLFactory.LoginChangerListener loginChangerListener;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -36,23 +41,57 @@ public class MainApplication extends Application {
         LeakCanary.install(this);
 
         //首次校验配置文件
-        verityConfiguration();
+        configurationExist = Util.verifyConfiguration(this);
 
 
     }
 
-    public boolean verityConfiguration() {
-        //校验配置文件，缓存下来用于登录时校验
-        configurationExist = verifyConfiguration(this);
+    public MainApplication initCDLite() {
 
-        if(configurationExist){
+        if(cdlFactory == null){
 
-            //TODO 开启lite数据库的同步
+            cdlFactory = new CDLFactory();
 
-
+            cdlFactory.initCouchBaseLite(this);
         }
 
-        return configurationExist;
+
+        return this;
+    }
+
+    public CDLFactory.LoginChangerListener getLoginChangerListener() {
+        return loginChangerListener;
+    }
+
+    public void setRepChangerListener(CDLFactory.LoginChangerListener loginChangerListener) {
+
+        this.loginChangerListener = loginChangerListener;
+
+    }
+    public void startReplication(String[] ss) {
+
+        List<String> channels = new ArrayList<>();
+
+        channels.add(ss[0]);
+
+        if (cdlFactory != null) {
+
+            cdlFactory.startReplicator(channels, ss[1], ss[2]);
+
+            cdlFactory.setLoginChangerListener(loginChangerListener);
+        }
+    }
+
+
+
+    public void detchChangerListener() {
+
+
+        loginChangerListener = null;
+
+        cdlFactory.setLoginChangerListener(null);
+
+
     }
 
 

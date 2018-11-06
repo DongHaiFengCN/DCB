@@ -1,4 +1,4 @@
-package com.example.ydd.common;
+package com.example.ydd.common.tools;
 
 import android.Manifest;
 import android.app.Activity;
@@ -62,7 +62,7 @@ public class Util {
 
         String channel = preferences.getString("channel", "");
         String password = preferences.getString("password", "");
-        String telePhoneNumber = preferences.getString("password", "");
+        String telePhoneNumber = preferences.getString("name", "");
 
         if ("".equals(channel) || "".equals(password) || "".equals(telePhoneNumber)) {
 
@@ -70,7 +70,56 @@ public class Util {
 
         }
 
+        //启动数据库同步
+
         return true;
+
+
+    }
+
+    /**
+     * @param context  上下文
+     * @param channel  通道用来同步（可以当网关的名字）
+     * @param password 网关用户名
+     * @param name
+     * @return
+     */
+    public static boolean saveConfiguration(Context context, String channel, String password, String name) {
+
+        SharedPreferences preferences = context.getApplicationContext()
+                .getSharedPreferences("Configuration", Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("channel", channel);
+        editor.putString("password", password);
+        editor.putString("name", name);
+
+        return editor.commit();
+
+    }
+
+    /**
+     *
+     * @param context
+     * @return String[] 0:channel 1:password 2:name
+     */
+    public static String[] getVerifyConfiguration(Context context) {
+
+
+        SharedPreferences preferences = context.getApplicationContext()
+                .getSharedPreferences("Configuration", Context.MODE_PRIVATE);
+
+        String channel = preferences.getString("channel", "");
+        String password = preferences.getString("password", "");
+        String name = preferences.getString("name", "");
+
+        String[] strings = new String[3];
+
+        strings[0] = channel;
+        strings[1] = password;
+        strings[2] = name;
+
+        return strings;
 
 
     }

@@ -1,4 +1,4 @@
-package com.example.ydd.common;
+package com.example.ydd.common.tools;
 
 import android.support.annotation.NonNull;
 import android.util.Log;

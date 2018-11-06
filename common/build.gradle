@@ -27,4 +27,6 @@ dependencies {
     debugApi 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
     api 'com.squareup.okhttp3:okhttp:3.11.0'
     api 'org.kie.modules:com-google-code-gson:6.5.0.Final'
+    api 'com.couchbase.lite:couchbase-lite-android-ee:2.1.0'
+
 }

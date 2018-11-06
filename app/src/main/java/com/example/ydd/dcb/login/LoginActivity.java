@@ -14,12 +14,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.ydd.common.Util;
+import com.example.ydd.common.lite.common.CDLFactory;
+import com.example.ydd.common.lite.query.QueryWithMultipleConditional;
+import com.example.ydd.common.tools.Util;
 import com.example.ydd.dcb.R;
 import com.example.ydd.dcb.application.MainApplication;
 import com.example.ydd.dcb.order.DeskActivity;
+
+import static com.example.ydd.dcb.login.LoginPresent.CONFIG_STATUS;
 
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
@@ -35,33 +40,89 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     private CheckBox rememberCk;
 
-    private AlertDialog alertDialog;
+    private ProgressBar progressBar;
+
+    private String adminName;
+
+    private String adminPassword;
+
+    private MainApplication mp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mp = (MainApplication) getApplicationContext();
 
         //获取文件读写权限
         Util.checkPermission(this);
 
-        //注册层控制
         loginPresent = new LoginPresent(this);
 
-        //初始化控件
         initView();
+
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+
+        if (MainApplication.configurationExist) {
+
+            mp.initCDLite().startReplication(Util.getVerifyConfiguration(getApplicationContext()));
+
+        }
+
+        mp.setRepChangerListener(new CDLFactory.LoginChangerListener() {
+            @Override
+            public void getProgress(final Long completed, final Long total) {
+
+                if (total > 0 && progressBar.getVisibility() == View.INVISIBLE) {
+
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+
+                final int t = total.intValue();
+
+                final int c = completed.intValue();
+
+                progressBar.setMax(t);
+
+                progressBar.setProgress(c);
+
+                Log.e("DOAING", "total" + total + " completed" + completed);
+
+                if (progressBar.getProgress() == t) {
+
+                    progressBar.setVisibility(View.INVISIBLE);
+
+                }
+
+            }
+
+
+        });
+
         submitBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                loginPresent.submit(nameEt.getText().toString(), passwordEt.getText().toString());
+
+                if (loginPresent.submit(nameEt.getText().toString()
+                        , passwordEt.getText().toString())) {
+
+                    QueryWithMultipleConditional.getInstance()
+                            .addConditional("className", "Employee")
+                            .addConditional("name", "董海峰")
+                            .generate();
+
+                }
+
+
             }
         });
 
@@ -95,47 +156,43 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
-        if (i == R.id.action_rebind) {
+        if (i == R.id.action_rebind1) {
 
-            View view = getLayoutInflater().inflate(R.layout.activity_login_bind_view, null);
+            bindDevice();
 
-            final EditText telePhoneNumberEt = view.findViewById(R.id.telephone_number_et);
+        }else if(i == R.id.action_rebind2){
 
-            final EditText passwordEt = view.findViewById(R.id.password_et);
-
-            AlertDialog alertDialog = new AlertDialog.Builder(this).setView(view)
-                    .setTitle("绑定新账号").setPositiveButton("确定", null).show();
-
-            alertDialog.getButton(Dialog.BUTTON_POSITIVE)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            if (telePhoneNumberEt.getText().length() == 0) {
-                                telePhoneNumberEt.setError("电话不能为空！");
-                                return;
-                            } else if (passwordEt.getText().length() == 0) {
-                                passwordEt.setError("密码不能为空！");
-                                return;
-                            } else {
-
-                                loginPresent.bindNewMsg(telePhoneNumberEt.getText().toString()
-                                        , passwordEt.getText().toString());
-                            }
-
-                        }
-                    });
 
         }
         return true;
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        loginPresent.detach();
+
+        mp.detchChangerListener();
+
+
+    }
+
+
+    /**
+     * ui线程中的一些操作返回
+     *
+     * @param msg  返回信息
+     * @param type 返回操作符号
+     */
 
     @Override
     public void setMsg(String msg, int type) {
 
         switch (type) {
 
-            case LoginPresent.NAME_STATUS:
+            case LoginPresent.NAME_STATUS_FAIL:
                 nameEt.setError(msg);
 
                 break;
@@ -143,7 +200,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                 passwordEt.setError(msg);
 
                 break;
-            case LoginPresent.CONFIG_STATUS:
+            case CONFIG_STATUS:
 
                 new AlertDialog.Builder(LoginActivity.this)
                         .setTitle("使用说明")
@@ -162,6 +219,15 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     }
 
+    /**
+     * 子线程返回的数据需要在ui线程中回调，
+     * 主要处理绑定新设备的时候数据的处理，
+     * 网络获取配置时候的回调，
+     * 文件读取与保存时候的状态回调。
+     *
+     * @param msg  信息
+     * @param type 返回类型
+     */
     @Override
     public void postMsg(final String msg, final int type) {
         runOnUiThread(new Runnable() {
@@ -171,21 +237,18 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                 switch (type) {
 
                     case LoginPresent.BINDVIEW_STATUS_SUCCESS:
-                        //TODO 网络拉取数据成功，处理异步回调的数据
 
-                        //发起二次读取配置的请求，并开启数据库同步
-                       if(((MainApplication) getApplicationContext()).verityConfiguration()){
-
-                           alertDialog.dismiss();
-
-                       } else {
-
-                           Toast.makeText(LoginActivity.this,"配置成功！",Toast.LENGTH_LONG).show();
-                       }
+                        //开启同步
+                        mp.initCDLite().startReplication(Util.getVerifyConfiguration(getApplicationContext()));
 
                         break;
 
                     case LoginPresent.BINDVIEW_STATUS_FAIL:
+
+                        Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_LONG).show();
+
+                        break;
+                    case LoginPresent.COMMON_MSG:
 
                         Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_LONG).show();
 
@@ -208,6 +271,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     }
 
+
     /**
      * 初始化控件
      */
@@ -217,13 +281,49 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         passwordEt = findViewById(R.id.password_et);
         submitBt = findViewById(R.id.submit_bt);
         rememberCk = findViewById(R.id.remember_ck);
-    }
+        progressBar = findViewById(R.id.progress_bar);
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        loginPresent.clearAll();
 
     }
+
+    /**
+     * 触发绑定设备的方法，这里可以是打开摄像头扫描二维码
+     */
+    private void bindDevice() {
+
+        View view = getLayoutInflater().inflate(R.layout.activity_login_bind_view, null);
+
+        final EditText telePhoneNumberEt = view.findViewById(R.id.telephone_number_et);
+
+        final EditText passwordEt = view.findViewById(R.id.password_et);
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).setView(view)
+                .setTitle("绑定新账号").setPositiveButton("确定", null).show();
+
+        alertDialog.getButton(Dialog.BUTTON_POSITIVE)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (telePhoneNumberEt.getText().length() == 0) {
+                            telePhoneNumberEt.setError("电话不能为空！");
+                            return;
+                        } else if (passwordEt.getText().length() == 0) {
+                            passwordEt.setError("密码不能为空！");
+                            return;
+                        } else {
+
+                            adminName = telePhoneNumberEt.getText().toString();
+
+                            adminPassword = passwordEt.getText().toString();
+
+                            loginPresent.bindNewMsg(adminName
+                                    , adminPassword);
+                            alertDialog.dismiss();
+                        }
+
+                    }
+                });
+    }
+
 }

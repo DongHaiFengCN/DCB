@@ -2,10 +2,14 @@
     android:id="@+id/email_login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/margin_8"
-    android:layout_marginTop="@dimen/margin_8"
-    android:layout_marginRight="@dimen/margin_8"
     android:orientation="vertical">
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:visibility="invisible"
+        android:layout_gravity="center"/>
 
 
     <EditText
