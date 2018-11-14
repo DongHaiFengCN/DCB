@@ -7,5 +7,5 @@ public interface LoginView {
 
     void postMsg(String msg,int type);
 
-    void success();
+    void success(String id);
 }

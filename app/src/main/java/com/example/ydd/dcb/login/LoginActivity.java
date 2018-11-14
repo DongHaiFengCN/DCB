@@ -1,9 +1,12 @@
 package com.example.ydd.dcb.login;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,14 +21,13 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.ydd.common.lite.common.CDLFactory;
-import com.example.ydd.common.lite.query.QueryWithMultipleConditional;
 import com.example.ydd.common.tools.Util;
 import com.example.ydd.dcb.R;
 import com.example.ydd.dcb.application.MainApplication;
-import com.example.ydd.dcb.order.DeskActivity;
+
+import com.example.ydd.dcb.order.MainActivity;
 
 import static com.example.ydd.dcb.login.LoginPresent.CONFIG_STATUS;
-
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
@@ -47,21 +49,19 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     private String adminPassword;
 
     private MainApplication mp;
-
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        initView();
         mp = (MainApplication) getApplicationContext();
 
         //获取文件读写权限
         Util.checkPermission(this);
 
         loginPresent = new LoginPresent(this);
-
-        initView();
 
 
     }
@@ -73,11 +73,13 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         if (MainApplication.configurationExist) {
 
-            mp.initCDLite().startReplication(Util.getVerifyConfiguration(getApplicationContext()));
+            CDLFactory.getInstance().initCouchBaseLite(getApplicationContext())
+                    .startReplicator(Util.getVerifyConfiguration(getApplicationContext()));
 
         }
 
-        mp.setRepChangerListener(new CDLFactory.LoginChangerListener() {
+        //获取同步监听
+        CDLFactory.getInstance().setLoginChangerListener(new CDLFactory.LoginChangerListener() {
             @Override
             public void getProgress(final Long completed, final Long total) {
 
@@ -94,16 +96,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
                 progressBar.setProgress(c);
 
-                Log.e("DOAING", "total" + total + " completed" + completed);
+                Log.e("DOAING", "completed " + completed + " total " + total);
 
                 if (progressBar.getProgress() == t) {
 
                     progressBar.setVisibility(View.INVISIBLE);
 
                 }
-
             }
-
 
         });
 
@@ -112,32 +112,29 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
             public void onClick(View v) {
 
 
-                if (loginPresent.submit(nameEt.getText().toString()
-                        , passwordEt.getText().toString())) {
-
-                    QueryWithMultipleConditional.getInstance()
-                            .addConditional("className", "Employee")
-                            .addConditional("name", "董海峰")
-                            .generate();
-
-                }
-
+                loginPresent.submit(nameEt.getText().toString()
+                        , passwordEt.getText().toString());
 
             }
         });
 
-
         rememberCk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = preferences.edit();
 
                 if (isChecked) {
 
-                    Log.e("DOAING", "选中的");
+                    editor.putString("name", nameEt.getText().toString());
+                    editor.putString("paw", passwordEt.getText().toString());
+                    editor.putBoolean("isCk", isChecked);
+
+                    editor.apply();
 
                 } else {
 
-                    Log.e("DOAING", "取消了");
+                    editor.clear();
+                    editor.commit();
 
                 }
 
@@ -160,7 +157,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
             bindDevice();
 
-        }else if(i == R.id.action_rebind2){
+        } else if (i == R.id.action_rebind2) {
 
 
         }
@@ -174,7 +171,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         loginPresent.detach();
 
-        mp.detchChangerListener();
+        //解绑监听
+        CDLFactory.getInstance().setLoginChangerListener(null);
 
 
     }
@@ -238,8 +236,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
                     case LoginPresent.BINDVIEW_STATUS_SUCCESS:
 
-                        //开启同步
-                        mp.initCDLite().startReplication(Util.getVerifyConfiguration(getApplicationContext()));
+                        CDLFactory.getInstance().initCouchBaseLite(getApplicationContext())
+                                .startReplicator(Util.getVerifyConfiguration(getApplicationContext()));
 
                         break;
 
@@ -265,10 +263,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void success() {
+    public void success(String id) {
 
-        startActivity(new Intent(LoginActivity.this, DeskActivity.class));
+        mp.setEmployeeId(id);
 
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
 
@@ -277,11 +277,22 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
      */
     private void initView() {
 
+        preferences = getApplicationContext()
+                .getSharedPreferences("LoginInfo", Context.MODE_PRIVATE);
+
         nameEt = findViewById(R.id.name_et);
         passwordEt = findViewById(R.id.password_et);
         submitBt = findViewById(R.id.submit_bt);
         rememberCk = findViewById(R.id.remember_ck);
         progressBar = findViewById(R.id.progress_bar);
+
+        String name = preferences.getString("name", "");
+        String paw = preferences.getString("paw", "");
+        Boolean isCheck = preferences.getBoolean("isCk", false);
+
+        rememberCk.setChecked(isCheck);
+        nameEt.setText(name);
+        passwordEt.setText(paw);
 
 
     }

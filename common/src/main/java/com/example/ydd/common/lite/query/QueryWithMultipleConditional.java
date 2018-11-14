@@ -9,6 +9,7 @@ import com.couchbase.lite.Dictionary;
 import com.couchbase.lite.Expression;
 import com.couchbase.lite.From;
 import com.couchbase.lite.Meta;
+import com.couchbase.lite.MutableDictionary;
 import com.couchbase.lite.QueryBuilder;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
@@ -19,16 +20,22 @@ import com.example.ydd.common.lite.common.CDLFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class QueryWithMultipleConditional extends CBLite {
-    private Database database = CDLFactory.database;
+    private Database database = CDLFactory.getInstance().getDatabase();
     private static QueryWithMultipleConditional queryWithMultipleConditional;
 
 
-    private static HashMap<String, Object> hashMap;
+    private HashMap<String, Object> hashMap;
 
     public QueryWithMultipleConditional addConditional(String k, Object v) {
+
+        if (hashMap == null) {
+
+            hashMap = new HashMap<>();
+        }
 
         hashMap.put(k, v);
 
@@ -43,11 +50,10 @@ public class QueryWithMultipleConditional extends CBLite {
      */
 
     @Override
-    public Object generate() {
+    public List<Dictionary> generate() {
 
-        getExpression();
-
-        From from = QueryBuilder.select(SelectResult.expression(Meta.id),SelectResult.all()).from(DataSource.database(database));
+        From from = QueryBuilder.select(SelectResult.expression(Meta.id),
+                SelectResult.all()).from(DataSource.database(database));
         ResultSet results = null;
         try {
 
@@ -64,18 +70,19 @@ public class QueryWithMultipleConditional extends CBLite {
         Dictionary dictionary;
         while ((r = results.next()) != null) {
 
-
             dictionary = r.getDictionary(1);
 
-            dictionaries.add(dictionary);
+            MutableDictionary mutableDictionary = dictionary.toMutable();
 
-            Log.e("DOAING", r.getString(0));
-            Log.e("DOAING", dictionary.getString("name"));
+            mutableDictionary.setString("id", r.getString(0));
 
+            dictionaries.add(mutableDictionary);
 
         }
-        //15688882487 mobile
-        return null;
+
+        hashMap.clear();
+
+        return dictionaries;
     }
 
     private Expression getExpression() {
@@ -84,13 +91,15 @@ public class QueryWithMultipleConditional extends CBLite {
 
         Map.Entry entry = (Map.Entry) entries.next();
 
-        Expression expression = Expression.property(String.valueOf(entry.getKey())).equalTo(Expression.value(entry.getValue()));
+        Expression expression = Expression.property(String.valueOf(entry.getKey()))
+                .equalTo(Expression.value(entry.getValue()));
 
         while (entries.hasNext()) {
 
             entry = (Map.Entry) entries.next();
 
-            expression.and(Expression.string(String.valueOf(entry.getKey())).equalTo(Expression.value(entry.getValue())));
+            expression = expression.and(Expression.property(String.valueOf(entry.getKey()))
+                   .equalTo(Expression.value(entry.getValue())));
 
         }
 
@@ -103,13 +112,8 @@ public class QueryWithMultipleConditional extends CBLite {
 
             queryWithMultipleConditional = new QueryWithMultipleConditional();
 
-            hashMap = new HashMap<>();
 
-        } else {
-
-            hashMap.clear();
         }
-
         return queryWithMultipleConditional;
 
     }

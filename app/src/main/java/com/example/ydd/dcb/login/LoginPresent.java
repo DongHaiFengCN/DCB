@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.couchbase.lite.Dictionary;
+import com.example.ydd.common.lite.query.QueryWithMultipleConditional;
 import com.example.ydd.common.tools.Constant;
 import com.example.ydd.common.tools.NetworkHandle;
 import com.example.ydd.common.tools.Util;
@@ -13,6 +15,9 @@ import com.google.gson.Gson;
 
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -49,10 +54,11 @@ public class LoginPresent {
 
     /**
      * 发起登录
+     *
      * @param msg（手机号或员工号）
      * @param password     密码
      */
-    public boolean submit(@NonNull String msg, @NonNull String password) {
+    public void submit(@NonNull String msg, @NonNull String password) {
 
 
         if (!MainApplication.configurationExist) {
@@ -60,40 +66,55 @@ public class LoginPresent {
             loginView.setMsg("新注册设备或配置丢失，请先绑定再启用设备！"
                     + "\n" + "(点击右上角按钮进行绑定)", CONFIG_STATUS);
 
-            return false;
+            return;
         }
 
         if ("".equals(msg)) {
 
             loginView.setMsg("手机号或用户名为空！", NAME_STATUS_FAIL);
 
-            return false;
+            return;
         }
 
         if ("".equals(password)) {
 
             loginView.setMsg("密码空！", PASSWORD_STATUS);
 
-            return false;
+            return;
         }
 
+
+        List<Dictionary> dictionaries;
 
         if (Util.isPhoneNumber(msg)) {
 
-            Log.e("DOAING", "手机号");
+            Log.e("DOAING","电话号");
 
-
-
+            dictionaries = QueryWithMultipleConditional.getInstance()
+                    .addConditional("className", "Employee")
+                    .addConditional("mobile", msg)
+                    .addConditional("pwd", password)
+                    .generate();
         } else {
 
-            Log.e("DOAING", "不是手机号");
+            Log.e("DOAING","用户名");
 
-
-
+            dictionaries = QueryWithMultipleConditional
+                    .getInstance()
+                    .addConditional("className", "Employee")
+                    .addConditional("userName", msg)
+                    .addConditional("pwd", password)
+                    .generate();
         }
 
 
-        return true;
+        Log.e("DOAING", dictionaries.size() + "");
+
+        if (dictionaries.size() > 0) {
+
+
+            loginView.success(dictionaries.get(0).getString("id"));
+        }
 
     }
 
@@ -102,7 +123,6 @@ public class LoginPresent {
      *
      * @param mobile 管理员手机号
      * @param psw    管理员密码
-     *
      */
     public void bindNewMsg(final String mobile, final String psw) {
 
@@ -121,8 +141,9 @@ public class LoginPresent {
 
     /**
      * 发送绑定请求信息
+     *
      * @param mobile 网关手机号/名字
-     * @param psw 网关用户密码
+     * @param psw    网关用户密码
      */
     private void postBindRequestMsg(final String mobile, final String psw) {
         //发起绑定数据的方法

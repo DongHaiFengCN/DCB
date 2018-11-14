@@ -1,6 +1,7 @@
 package com.example.ydd.dcb.application;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.example.ydd.common.tools.Util;
 import com.example.ydd.common.lite.common.CDLFactory;
@@ -24,6 +25,10 @@ import java.util.List;
 
 public class MainApplication extends Application {
 
+
+
+    private String employeeId;
+
     /**
      * 判断配置文件的完整性
      */
@@ -46,53 +51,17 @@ public class MainApplication extends Application {
 
     }
 
-    public MainApplication initCDLite() {
-
-        if(cdlFactory == null){
-
-            cdlFactory = new CDLFactory();
-
-            cdlFactory.initCouchBaseLite(this);
-        }
-
-
-        return this;
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
     }
 
-    public CDLFactory.LoginChangerListener getLoginChangerListener() {
-        return loginChangerListener;
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
     }
 
-    public void setRepChangerListener(CDLFactory.LoginChangerListener loginChangerListener) {
-
-        this.loginChangerListener = loginChangerListener;
-
+    public String getEmployeeId() {
+        return employeeId;
     }
-    public void startReplication(String[] ss) {
-
-        List<String> channels = new ArrayList<>();
-
-        channels.add(ss[0]);
-
-        if (cdlFactory != null) {
-
-            cdlFactory.startReplicator(channels, ss[1], ss[2]);
-
-            cdlFactory.setLoginChangerListener(loginChangerListener);
-        }
-    }
-
-
-
-    public void detchChangerListener() {
-
-
-        loginChangerListener = null;
-
-        cdlFactory.setLoginChangerListener(null);
-
-
-    }
-
 
 }

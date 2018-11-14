@@ -1,14 +1,15 @@
 package com.example.ydd.common.lite.common;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.couchbase.lite.BasicAuthenticator;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
+import com.couchbase.lite.DatabaseChange;
+import com.couchbase.lite.DatabaseChangeListener;
 import com.couchbase.lite.DatabaseConfiguration;
+import com.couchbase.lite.Document;
 import com.couchbase.lite.Endpoint;
 import com.couchbase.lite.Replicator;
 import com.couchbase.lite.ReplicatorChange;
@@ -18,10 +19,12 @@ import com.couchbase.lite.URLEndpoint;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
+import static com.example.ydd.common.tools.Constant.REPLICATE_URL;
 
 /**
  * @author dong
@@ -29,15 +32,25 @@ import static android.content.ContentValues.TAG;
  */
 public class CDLFactory {
 
-    public static Database database;
+    private Replicator replicator;
+
+    private static CDLFactory cdlFactory;
+
+    public Database getDatabase() {
+
+        return database;
+    }
+
+    private static Database database;
 
     private LoginChangerListener loginChangerListener;
+
 
     public void setLoginChangerListener(LoginChangerListener loginChangerListener) {
         this.loginChangerListener = loginChangerListener;
     }
 
-    public void initCouchBaseLite(Context context) {
+    public CDLFactory initCouchBaseLite(Context context) {
 
         DatabaseConfiguration config = new DatabaseConfiguration(context.getApplicationContext());
 
@@ -47,21 +60,22 @@ public class CDLFactory {
             e.printStackTrace();
         }
 
-
+        return this;
     }
 
-    /**
-     *
-     * @param channels 同步的通道
-     * @param adminPsw 网关用户
-     * @param adminName 暂时和channel一个
-     */
 
-    public void startReplicator(List<String> channels, String adminPsw, String adminName) {
+    public void startReplicator(String[] ss) {
+
+        List<String> channels = new ArrayList<>();
+
+        channels.add(ss[0]);
+
+        String adminPsw = ss[1];
+        String adminName = ss[2];
 
         Endpoint targetEndpoint = null;
         try {
-            targetEndpoint = new URLEndpoint(new URI("ws://123.207.174.171:4984/kitchen/"));
+            targetEndpoint = new URLEndpoint(new URI(REPLICATE_URL));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -69,10 +83,11 @@ public class CDLFactory {
         ReplicatorConfiguration replConfig = new ReplicatorConfiguration(database, targetEndpoint)
                 .setContinuous(true)
                 .setReplicatorType(ReplicatorConfiguration.ReplicatorType.PULL)
-                .setAuthenticator(new BasicAuthenticator(adminName, adminPsw));
+                .setAuthenticator(new BasicAuthenticator(adminName, adminPsw))
+                .setChannels(channels);
 
 
-        Replicator replicator = new Replicator(replConfig);
+        replicator = new Replicator(replConfig);
 
         replicator.addChangeListener(new ReplicatorChangeListener() {
             @Override
@@ -80,7 +95,9 @@ public class CDLFactory {
 
                 if (loginChangerListener != null) {
 
-                    loginChangerListener.getProgress(change.getStatus().getProgress().getCompleted()
+                    loginChangerListener.getProgress(change.getStatus()
+                                    .getProgress()
+                                    .getCompleted()
                             , change.getReplicator().getStatus().getProgress().getTotal());
                 }
 
@@ -90,10 +107,52 @@ public class CDLFactory {
         });
 
         replicator.start();
-
+        //test();
 
     }
 
+
+    public static CDLFactory getInstance() {
+
+        if (cdlFactory == null) {
+
+            cdlFactory = new CDLFactory();
+        }
+
+        return cdlFactory;
+    }
+
+    public Document getDocument(String id) {
+
+
+        return database.getDocument(id);
+    }
+
+    public void test() {
+
+        database.addChangeListener(new DatabaseChangeListener() {
+            @Override
+            public void changed(DatabaseChange change) {
+
+
+                List<String> ids = change.getDocumentIDs();
+
+                for (String id : ids) {
+
+                    Log.e("DOAING", id);
+
+                    Document document = database.getDocument("id");
+
+                    HashMap hashMap = (HashMap) document.toMap();
+
+                    Log.e("DOAING",hashMap.toString());
+
+
+                }
+
+            }
+        });
+    }
 
     public interface LoginChangerListener {
 

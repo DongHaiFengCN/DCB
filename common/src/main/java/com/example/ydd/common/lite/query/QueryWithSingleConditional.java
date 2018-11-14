@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class QueryWithSingleConditional<K, V> extends CBLite {
 
-    private Database database = CDLFactory.database;
+    private Database database = CDLFactory.getInstance().getDatabase();
 
     private static QueryWithSingleConditional queryWithSingleConditional;
 

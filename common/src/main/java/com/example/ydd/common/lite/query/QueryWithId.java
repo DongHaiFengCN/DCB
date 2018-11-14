@@ -7,8 +7,6 @@ import com.example.ydd.common.lite.common.CDLFactory;
 
 public class QueryWithId extends CBLite {
 
-    private Database database = CDLFactory.database;
-
     private static QueryWithId queryWithSingleConditional;
 
 
@@ -25,7 +23,7 @@ public class QueryWithId extends CBLite {
     public Document generate() {
 
 
-        return CDLFactory.database.getDocument(id);
+        return CDLFactory.getInstance().getDocument(id);
     }
 
     public static QueryWithId getInstance() {
