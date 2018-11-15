@@ -34,10 +34,6 @@ public class MainApplication extends Application {
      */
     public static boolean configurationExist = false;
 
-    public CDLFactory cdlFactory;
-
-    private CDLFactory.LoginChangerListener loginChangerListener;
-
     @Override
     public void onCreate() {
         super.onCreate();

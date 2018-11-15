@@ -71,7 +71,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
     /**
      * 监听 areaId 所属的table
-     *
      * @param areaId
      */
     public void startListener(String areaId) {
@@ -130,10 +129,9 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     }
 
     /**
-     * 销毁页面时移除动态接听
+     * 移除动态接听
      */
     protected void onDestroy() {
-
 
         query.removeChangeListener(listenerToken);
 

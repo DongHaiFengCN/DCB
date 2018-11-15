@@ -16,6 +16,7 @@ import com.example.ydd.common.lite.common.CBLite;
 import com.example.ydd.common.lite.common.CDLFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class QueryWithSingleConditional<K, V> extends CBLite {
 
@@ -38,7 +39,7 @@ public class QueryWithSingleConditional<K, V> extends CBLite {
 
 
     @Override
-    public Object generate() {
+    public List<Dictionary> generate() {
 
         ResultSet results = null;
         Query query = QueryBuilder.select(SelectResult.all()).from(DataSource.database(database))
@@ -61,7 +62,7 @@ public class QueryWithSingleConditional<K, V> extends CBLite {
 
             dictionaries.add(dictionary);
 
-            Log.e("DOAING",dictionary.getString("name"));
+            Log.e("DOAING", dictionary.getString("name"));
         }
 
 
