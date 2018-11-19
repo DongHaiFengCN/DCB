@@ -155,19 +155,60 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
 
 
-                MutableDocument mutableDocument = new MutableDocument("Table."+UUID.randomUUID().toString());
-
+         /*       MutableDocument mutableDocument = new MutableDocument("Area."+UUID.randomUUID().toString());
 
                 mutableDocument.setString("channelId","e310cfc1");
 
-                mutableDocument.setString("className","Table");
+                mutableDocument.setString("className","Area");
 
-                mutableDocument.setString("areaId","Area.43dbace1-7b30-4d32-97f2-3e2bf710ef32");
-                mutableDocument.setInt("serialNumber",6);
-                mutableDocument.setInt("state",0);
-                mutableDocument.setBoolean("valid",true);
+                mutableDocument.setString("name","测试房间3");
 
                 CDLFactory.getInstance().saveDocument(mutableDocument);
+
+
+                MutableDocument mutableDocument1 = new MutableDocument("Area."+UUID.randomUUID().toString());
+
+                mutableDocument1.setString("channelId","e310cfc1");
+
+                mutableDocument1.setString("className","Area");
+
+                mutableDocument1.setString("name","测试房间4");
+
+                CDLFactory.getInstance().saveDocument(mutableDocument1);
+
+
+                MutableDocument mutableDocument2 = new MutableDocument("Area."+UUID.randomUUID().toString());
+
+                mutableDocument2.setString("channelId","e310cfc1");
+
+                mutableDocument2.setString("className","Area");
+
+                mutableDocument2.setString("name","测试房间5");
+
+                CDLFactory.getInstance().saveDocument(mutableDocument2);
+
+
+
+                MutableDocument mutableDocument3 = new MutableDocument("Area."+UUID.randomUUID().toString());
+
+                mutableDocument3.setString("channelId","e310cfc1");
+
+                mutableDocument3.setString("className","Area");
+
+                mutableDocument3.setString("name","测试房间6");
+
+                CDLFactory.getInstance().saveDocument(mutableDocument3);
+
+
+                MutableDocument mutableDocument4 = new MutableDocument("Area."+UUID.randomUUID().toString());
+
+                mutableDocument4.setString("channelId","e310cfc1");
+
+                mutableDocument4.setString("className","Area");
+
+                mutableDocument4.setString("name","测试房间7");
+
+                CDLFactory.getInstance().saveDocument(mutableDocument4);*/
 
 
             }

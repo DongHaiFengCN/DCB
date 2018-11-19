@@ -123,5 +123,44 @@ public class Util {
 
     }
 
+    /**
+     * 获取屏幕高度(px)
+     */
+    public static int getScreenHeight(Context context) {
+        return context.getResources().getDisplayMetrics().heightPixels;
+    }
+    /**
+     * 获取屏幕宽度(px)
+     */
+    public static int getScreenWidth(Context context) {
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
+
+    /**
+     * dp转px
+     * @param dp
+     * @return
+     */
+    public static int dip2px(int dp,Context context)
+    {
+        float density = context.getResources().getDisplayMetrics().density;
+        return (int) (dp*density+0.5);
+    }
+
+    /** px转换dip */
+    public static int px2dip(int px,Context context) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (px / scale + 0.5f);
+    }
+    /** px转换sp */
+    public static int px2sp(int pxValuem,Context context) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValuem / fontScale + 0.5f);
+    }
+    /** sp转换px */
+    public static int sp2px(int spValue,Context context) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
+    }
 
 }

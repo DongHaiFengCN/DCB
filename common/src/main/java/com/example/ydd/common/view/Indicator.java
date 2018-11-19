@@ -25,7 +25,6 @@ import java.util.List;
 
 public class Indicator extends LinearLayout {
 
-    private static final int TEXT_DEFAULT_COLOR = 0x77ffffff;
 
     private ViewPager mViewPager;
 
@@ -58,7 +57,7 @@ public class Indicator extends LinearLayout {
     /**
      * 初始化的时候三角形的位置
      */
-    private int mInitTranslationX;
+    private int mInitTranslationX = 0;
 
     /**
      * 移动的时候三角形的位置
@@ -66,9 +65,19 @@ public class Indicator extends LinearLayout {
     private int mTranslationX;
 
 
-    private int visibleTableCount = 4;
+    private int visibleTableCount = 6;
 
     private int tableWidth;
+
+    private int sum;
+
+    private int scrolledWidth;
+
+    //记录上一次滑动的positionOffsetPixels值
+    private float lastValue = -1;
+
+
+    private boolean isLeft;
 
     public Indicator(Context context) {
         this(context, null);
@@ -97,9 +106,12 @@ public class Indicator extends LinearLayout {
 
         mPaint.setStyle(Paint.Style.FILL);
 
-        mPaint.setColor(Color.parseColor("#ffffff"));
+        mPaint.setColor(getResources().getColor(R.color.colorPrimary));
 
         mPaint.setPathEffect(new CornerPathEffect(3));
+
+
+        sum = getScreenWidth();
     }
 
     /**
@@ -118,7 +130,7 @@ public class Indicator extends LinearLayout {
 
         //initTriangle();
         initRec();
-
+        scrolledWidth = getWidth() / visibleTableCount;
     }
 
     @Override
@@ -141,11 +153,12 @@ public class Indicator extends LinearLayout {
 
             params.weight = 0;
 
-            params.width = getScreenWidth() / visibleTableCount;
+            params.width = sum / visibleTableCount;
 
             view.setLayoutParams(params);
 
         }
+
 
     }
 
@@ -211,12 +224,13 @@ public class Indicator extends LinearLayout {
 
         mPath.lineTo(tableWidth, 0);
 
-        mPath.lineTo(tableWidth , -mTriangleHeight);
+        mPath.lineTo(tableWidth, -mTriangleHeight);
 
-        mPath.lineTo(0 , -mTriangleHeight);
+        mPath.lineTo(0, -mTriangleHeight);
 
         mPath.close();
     }
+
     /*
      * 第几个table 然后偏移了多少
      * @param position 第几个table下
@@ -224,23 +238,22 @@ public class Indicator extends LinearLayout {
      */
     public void scrolled(int position, float offset) {
 
-        int width = getWidth() / visibleTableCount;
 
         mTranslationX = (int) (tableWidth * (position + offset));
 
         if (position >= visibleTableCount - 2 &&
                 offset > 0 &&
-                getChildCount() > visibleTableCount && getChildCount() != position + 2) {
+                getChildCount() > visibleTableCount) {
 
             if (visibleTableCount != 1) {
 
-                int sum = (position - visibleTableCount + 2) * width;
+                int sum = (position - visibleTableCount + 2) * scrolledWidth;
 
-                this.scrollTo((int) (sum + width * offset), 0);
+                this.scrollTo((int) (sum + scrolledWidth * offset), 0);
 
             } else {
 
-                this.scrollTo((int) ((position + offset) * width), 0);
+                this.scrollTo((int) ((position + offset) * scrolledWidth), 0);
             }
 
         }
@@ -272,7 +285,7 @@ public class Indicator extends LinearLayout {
 
         layoutParams.weight = 0;
 
-        layoutParams.width = getScreenWidth() / visibleTableCount;
+        layoutParams.width = sum / visibleTableCount;
 
         view.setLayoutParams(layoutParams);
 
@@ -280,9 +293,17 @@ public class Indicator extends LinearLayout {
 
         view.setGravity(Gravity.CENTER);
 
-        view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 
-        view.setTextColor(TEXT_DEFAULT_COLOR);
+        if (position == 0) {
+
+            view.setTextColor(getResources().getColor(R.color.cyan));
+
+        } else {
+
+            view.setTextColor(getResources().getColor(R.color.grey_color2));
+        }
+
 
         view.setOnClickListener(new OnClickListener() {
             @Override
@@ -302,12 +323,32 @@ public class Indicator extends LinearLayout {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
 
+
                 scrolled(i, v);
+
 
             }
 
             @Override
             public void onPageSelected(int i) {
+
+                TextView textView;
+
+                for (int j = 0; j < getChildCount(); j++) {
+
+                    textView = (TextView) getChildAt(j);
+
+
+                    if (j == i) {
+
+                        textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+                    } else {
+                        textView.setTextColor(getResources().getColor(R.color.grey_color2));
+
+                    }
+                }
+
 
             }
 
@@ -317,6 +358,7 @@ public class Indicator extends LinearLayout {
             }
         });
     }
+
 
 
 }

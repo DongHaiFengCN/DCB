@@ -1,40 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:DOAING="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+    <RelativeLayout
+        android:id="@+id/title_rl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="45dp"
+        android:background="@color/white">
+
 
         <com.example.ydd.common.view.Indicator
             android:id="@+id/indicator"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
-            android:background="?attr/colorPrimary"
-            android:orientation="horizontal"
-            >
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
         </com.example.ydd.common.view.Indicator>
+        <Button
+            android:id="@+id/jump"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:text="≡"
+            android:background="@color/white"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
 
-    </android.support.design.widget.AppBarLayout>
+    </RelativeLayout>
+
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

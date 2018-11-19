@@ -48,7 +48,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
         ViewHolder viewHolder = new ViewHolder(view);
 
-
         return viewHolder;
 
     }
@@ -64,7 +63,9 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
                 //TODO 这里网络访问获取服务器的餐桌的状态，保证数据唯一
 
 
+
                 String id = mData.get(i).getString(0);
+
                 MutableDocument document = CDLFactory.getInstance()
                         .getDocument(id).toMutable();
 
@@ -123,16 +124,13 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
 
                 List<Result> resultList = change.getResults().allResults();
+
                 int size = resultList.size();
-                Result result;
 
                 for (int i = 0; i < size; i++) {
 
 
-                    result = resultList.get(i);
-
-
-                    goChange(result, i);
+                    goChange(resultList.get(i));
 
                 }
 
@@ -146,7 +144,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
         }
     }
 
-    private void goChange(Result result, int i) {
+    private void goChange(Result result) {
 
         String id = result.getString("id");
 
@@ -216,10 +214,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
     private boolean contains(Result result) {
 
-        for (Result result1 :
+        for (Result old :
                 mData)
 
-            if (result1.getString("id").equals(result.getString("id"))) {
+            if (old.getString("id").equals(result.getString("id"))) {
 
                 return true;
             }
