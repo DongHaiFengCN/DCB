@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,8 @@ public class TableFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+       // Log.e("DOAING","onStart "+id);
+
         tableAdapter = new TableAdapter();
 
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
@@ -69,12 +72,16 @@ public class TableFragment extends Fragment {
 
         recyclerView.setAdapter(tableAdapter);
 
+
     }
 
+    /**
+     * 处理不可见的时候的数据（home键）
+     */
     @Override
     public void onStop() {
         super.onStop();
-
+        //Log.e("DOAING","onStop "+id);
         if (tableAdapter != null) {
 
             tableAdapter.onDestroy();
@@ -84,12 +91,13 @@ public class TableFragment extends Fragment {
 
     }
 
+    /**
+     * 处理销毁fragment时的操作
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        recyclerView.setAdapter(null);
-
+       // Log.e("DOAING","onDestroyView "+id);
         recyclerView = null;
     }
 }

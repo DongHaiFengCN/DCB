@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.couchbase.lite.Dictionary;
+import com.couchbase.lite.Document;
+import com.example.ydd.common.lite.common.CDLFactory;
 import com.example.ydd.common.lite.query.QueryWithMultipleConditional;
 import com.example.ydd.common.tools.Constant;
 import com.example.ydd.common.tools.NetworkHandle;
@@ -83,12 +85,18 @@ public class LoginPresent {
             return;
         }
 
-
-        List<Dictionary> dictionaries;
+/*
+        CDLFactory.getInstance().deleteDocument("MsgTable.2b8f5a21-b100-4ff7-a8f2-f4413a6d3794");
+        CDLFactory.getInstance().deleteDocument("MsgTable.4aa1452e-0a1c-4640-8f80-ec914fb210a5");
+        CDLFactory.getInstance().deleteDocument("MsgTable.4b531718-d8f7-4487-abd1-db35eb7a34a8");
+        CDLFactory.getInstance().deleteDocument("MsgTable.abfcce56-70be-4279-8510-0c83b6e5395c");
+        CDLFactory.getInstance().deleteDocument("MsgTable.dc1fa359-d883-4e3b-9985-19d91fbc0d10");
+        CDLFactory.getInstance().deleteDocument("MsgTable.e9860ca8-f1cb-413a-ab8f-2b0d68c28fcc");
+        CDLFactory.getInstance().deleteDocument("MsgTable.f9709928-ebd1-4440-999c-1e0020e65c15");
+      */  List<Dictionary> dictionaries;
 
         if (Util.isPhoneNumber(msg)) {
 
-            Log.e("DOAING","电话号");
 
             dictionaries = QueryWithMultipleConditional.getInstance()
                     .addConditional("className", "Employee")
@@ -97,7 +105,6 @@ public class LoginPresent {
                     .generate();
         } else {
 
-            Log.e("DOAING","用户名");
 
             dictionaries = QueryWithMultipleConditional
                     .getInstance()
@@ -160,7 +167,6 @@ public class LoginPresent {
             @Override
             public void onResponse(Response response) {
 
-                //15688882487
                 try {
                     String msg = response.body().string();
 
@@ -193,6 +199,8 @@ public class LoginPresent {
 
             String channel = bindDeviceResponse.getData().getChannelId();
 
+            Log.e("DOAING",channel);
+
             initLocalConfig(psw, mobile, channel);
 
 
@@ -204,6 +212,7 @@ public class LoginPresent {
     }
 
     private void initLocalConfig(String psw, String mobile, String channel) {
+
         //保存配置文件,暂时保存channle， 用户名不是电话
         if (Util.saveConfiguration(context, channel, psw, channel)) {
 

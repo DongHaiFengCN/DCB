@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.couchbase.lite.Dictionary;
 import com.example.ydd.common.lite.query.QueryWithMultipleConditional;
@@ -17,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    //private RecyclerView recyclerView;
-    //private TableAdapter tableAdapter;
 
 
     private List<Dictionary> dictionaries;
@@ -30,15 +27,12 @@ public class MainActivity extends AppCompatActivity {
     private Indicator mIndicator;
     private  List<String> title = new ArrayList<>();
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initData();
-
 
         mIndicator = findViewById(R.id.indicator);
 
@@ -56,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void initData() {
 
      dictionaries = QueryWithMultipleConditional.getInstance()
@@ -68,25 +61,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Log.e("DOAING","AC  onStart");
-
-
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        Log.e("DOAING","AC  onDestroy");
-
-    }
-
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -107,9 +81,6 @@ public class MainActivity extends AppCompatActivity {
             return dictionaries.size();
         }
 
-
     }
-
-
 
 }

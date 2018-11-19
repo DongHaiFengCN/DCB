@@ -20,12 +20,16 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.MutableDocument;
 import com.example.ydd.common.lite.common.CDLFactory;
 import com.example.ydd.common.tools.Util;
 import com.example.ydd.dcb.R;
 import com.example.ydd.dcb.application.MainApplication;
 
 import com.example.ydd.dcb.order.MainActivity;
+
+import java.util.UUID;
 
 import static com.example.ydd.dcb.login.LoginPresent.CONFIG_STATUS;
 
@@ -50,6 +54,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     private MainApplication mp;
     private SharedPreferences preferences;
+
+    private static int sum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                     .startReplicator(Util.getVerifyConfiguration(getApplicationContext()));
 
         }
+
 
         //获取同步监听
         CDLFactory.getInstance().setLoginChangerListener(new CDLFactory.LoginChangerListener() {
@@ -137,6 +144,31 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                     editor.commit();
 
                 }
+
+            }
+        });
+
+
+        findViewById(R.id.re_bt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+                MutableDocument mutableDocument = new MutableDocument("Table."+UUID.randomUUID().toString());
+
+
+                mutableDocument.setString("channelId","e310cfc1");
+
+                mutableDocument.setString("className","Table");
+
+                mutableDocument.setString("areaId","Area.43dbace1-7b30-4d32-97f2-3e2bf710ef32");
+                mutableDocument.setInt("serialNumber",6);
+                mutableDocument.setInt("state",0);
+                mutableDocument.setBoolean("valid",true);
+
+                CDLFactory.getInstance().saveDocument(mutableDocument);
+
 
             }
         });

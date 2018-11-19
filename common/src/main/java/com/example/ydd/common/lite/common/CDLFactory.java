@@ -11,6 +11,7 @@ import com.couchbase.lite.DatabaseChangeListener;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Endpoint;
+import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Replicator;
 import com.couchbase.lite.ReplicatorChange;
 import com.couchbase.lite.ReplicatorChangeListener;
@@ -82,7 +83,7 @@ public class CDLFactory {
 
         ReplicatorConfiguration replConfig = new ReplicatorConfiguration(database, targetEndpoint)
                 .setContinuous(true)
-                .setReplicatorType(ReplicatorConfiguration.ReplicatorType.PULL)
+                .setReplicatorType(ReplicatorConfiguration.ReplicatorType.PUSH_AND_PULL)
                 .setAuthenticator(new BasicAuthenticator(adminName, adminPsw))
                 .setChannels(channels);
 
@@ -107,7 +108,7 @@ public class CDLFactory {
         });
 
         replicator.start();
-        //test();
+        test();
 
     }
 
@@ -128,6 +129,24 @@ public class CDLFactory {
         return database.getDocument(id);
     }
 
+    public void saveDocument(MutableDocument mutableDocument) {
+
+
+        try {
+            database.save(mutableDocument);
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteDocument(String id) {
+
+        try {
+            database.delete(database.getDocument(id));
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+    }
     public void test() {
 
         database.addChangeListener(new DatabaseChangeListener() {
@@ -141,11 +160,11 @@ public class CDLFactory {
 
                     Log.e("DOAING", id);
 
-                    Document document = database.getDocument("id");
+                  /*  Document document = database.getDocument("id");
 
                     HashMap hashMap = (HashMap) document.toMap();
 
-                    Log.e("DOAING",hashMap.toString());
+                    Log.e("DOAING",hashMap.toString());*/
 
 
                 }
