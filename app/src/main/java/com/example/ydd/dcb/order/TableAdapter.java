@@ -158,14 +158,11 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
         int count = 0;
 
-        if (!contains(result) && valid) {
-
+        if (!contains(result) && valid) {//添加新餐桌并排序
 
             for (Result old : mData) {
 
                 if (serialNumber < old.getInt("serialNumber")) {
-
-                    Log.e("DOAING", "插入位置：" + count);
 
                     break;
 
@@ -174,12 +171,11 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
                 count++;
             }
 
-
-            Log.e("DOAING", "插入的位置：" + count);
-
             mData.add(count, result);
 
             notifyItemInserted(count);
+
+            notifyItemRangeChanged(count, mData.size());
 
 
         } else if (contains(result)) {
@@ -199,15 +195,15 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
                     } else if (valid != old.getBoolean("valid")) {
 
-
                         mData.remove(count);
 
                         notifyItemRemoved(count);
 
+                        notifyItemRangeChanged(count, mData.size());
+
                         return;
 
                     }
-
 
                 }
 
