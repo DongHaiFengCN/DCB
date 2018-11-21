@@ -7,30 +7,32 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/title_rl"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/white">
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryDark">
 
-
-        <com.example.ydd.common.view.Indicator
-            android:id="@+id/indicator"
-            android:layout_width="match_parent"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tablayout"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            app:tabMode="scrollable" />
 
-        </com.example.ydd.common.view.Indicator>
         <Button
             android:id="@+id/jump"
             android:layout_width="45dp"
             android:layout_height="match_parent"
             android:text="≡"
-            android:background="@color/white"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 

@@ -2,6 +2,7 @@ package com.example.ydd.dcb.order;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,20 +10,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.couchbase.lite.Dictionary;
 import com.example.ydd.common.lite.query.QueryWithMultipleConditional;
 import com.example.ydd.common.tools.Util;
-import com.example.ydd.common.view.Indicator;
 import com.example.ydd.dcb.R;
 
 import java.util.ArrayList;
@@ -36,9 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
-
-
-    private Indicator mIndicator;
+    private TabLayout tabLayout;
     private List<String> title = new ArrayList<>();
 
     @Override
@@ -46,29 +41,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initData();
-
-        mIndicator = findViewById(R.id.indicator);
-
         mViewPager = findViewById(R.id.container);
+        tabLayout = findViewById(R.id.tablayout);
 
+        dictionaries = QueryWithMultipleConditional.getInstance()
+                .addConditional("className", "Area").generate();
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout.setupWithViewPager(mViewPager);
 
-        mIndicator.setViewPageAdapter(mViewPager);
-        mIndicator.setTableItemTitle(title);
+        for (int i = 0; i < dictionaries.size(); i++) {
+            title.add(dictionaries.get(i).getString("id"));
+            tabLayout.getTabAt(i).setText(title.get(i));
+        }
 
-        Button button = findViewById(R.id.jump);
-
-        button.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.jump).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
                 createPopWindow();
-
-
             }
         });
 
@@ -76,35 +67,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void createPopWindow() {
 
-        RelativeLayout relativeLayout = findViewById(R.id.title_rl);
+        LinearLayout relativeLayout = findViewById(R.id.title_rl);
 
         View productListView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popwindow, null);
         popWindow = new PopupWindow(productListView, Util.getScreenWidth(getApplicationContext()), 300, true);
 
         RecyclerView recyclerView = productListView.findViewById(R.id.pop_rcv);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 6);
+        GridLayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 4);
 
         recyclerView.setLayoutManager(layoutManager);
 
-        recyclerView.setAdapter(new MyAdapter());
-
+        recyclerView.setAdapter(new MoreAdapter());
 
         popWindow.showAsDropDown(relativeLayout);
     }
 
 
-    private void initData() {
-
-        dictionaries = QueryWithMultipleConditional.getInstance()
-                .addConditional("className", "Area").generate();
-
-        for (Dictionary dictionary : dictionaries) {
-
-            title.add(dictionary.getString("name"));
-        }
-
-    }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -128,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+    private class MoreAdapter extends RecyclerView.Adapter<MoreAdapter.ViewHolder> {
 
 
         @NonNull
@@ -144,14 +123,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
-
             viewHolder.button.setText(title.get(i));
 
             viewHolder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    mViewPager.setCurrentItem(i, true);
+                    mViewPager.setCurrentItem(i);
+                    tabLayout.getTabAt(i).select();
                     popWindow.dismiss();
 
                 }

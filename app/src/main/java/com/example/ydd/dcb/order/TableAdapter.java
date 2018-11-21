@@ -1,6 +1,9 @@
 package com.example.ydd.dcb.order;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,14 +58,22 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
+        int state = mData.get(i).getInt("state");
+
+        if (state == 0) {
+
+            viewHolder.cardView.setCardBackgroundColor(Color.parseColor("#FF439953"));
+
+        } else if (state == 1) {
+            viewHolder.cardView.setCardBackgroundColor(Color.parseColor("#de6838"));
+
+        }
         viewHolder.mText.setText("状态 " + mData.get(i).getInt("state") + "\n 桌号：" + mData.get(i).getInt("serialNumber"));
         viewHolder.mText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 //TODO 这里网络访问获取服务器的餐桌的状态，保证数据唯一
-
-
 
                 String id = mData.get(i).getString(0);
 
@@ -80,6 +91,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
                 }
 
                 CDLFactory.getInstance().saveDocument(document);
+
 
             }
         });
@@ -227,11 +239,15 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
 
     static class ViewHolder extends RecyclerView.ViewHolder {
+
+        CardView cardView;
         TextView mText;
 
         ViewHolder(View itemView) {
             super(itemView);
             mText = itemView.findViewById(R.id.item_tx);
+
+            cardView = itemView.findViewById(R.id.card_cv);
         }
     }
 
