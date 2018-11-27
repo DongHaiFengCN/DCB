@@ -2,6 +2,7 @@ package com.example.ydd.dcb.order;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,9 @@ import android.view.ViewGroup;
 
 import com.example.ydd.dcb.R;
 
+import static android.content.Context.VIBRATOR_SERVICE;
+import static android.support.v4.content.ContextCompat.getSystemService;
+
 
 public class TableFragment extends Fragment {
 
@@ -19,7 +23,7 @@ public class TableFragment extends Fragment {
     private RecyclerView recyclerView;
     private String id;
     private TableAdapter tableAdapter;
-
+    private Vibrator vibrator;
 
     public TableFragment() {
     }
@@ -33,6 +37,8 @@ public class TableFragment extends Fragment {
         TableFragment fragment = new TableFragment();
         Bundle args = new Bundle();
         args.putString(ARG_SECTION_NUMBER, id);
+
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -42,7 +48,10 @@ public class TableFragment extends Fragment {
         super.onAttach(context);
         id = getArguments().getString(ARG_SECTION_NUMBER);
 
+         vibrator = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
+
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,9 +68,9 @@ public class TableFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-       // Log.e("DOAING","onStart "+id);
+        // Log.e("DOAING","onStart "+id);
 
-        tableAdapter = new TableAdapter();
+        tableAdapter = new TableAdapter(vibrator);
 
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
 
@@ -96,7 +105,7 @@ public class TableFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-       // Log.e("DOAING","onDestroyView "+id);
+        // Log.e("DOAING","onDestroyView "+id);
         recyclerView = null;
     }
 }

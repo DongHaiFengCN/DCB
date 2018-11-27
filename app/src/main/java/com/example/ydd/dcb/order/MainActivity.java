@@ -1,7 +1,10 @@
 package com.example.ydd.dcb.order;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,44 +19,48 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
-import com.couchbase.lite.Dictionary;
-import com.example.ydd.common.lite.query.QueryWithMultipleConditional;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.DataSource;
+import com.couchbase.lite.Document;
+import com.couchbase.lite.Expression;
+import com.couchbase.lite.Meta;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryBuilder;
+import com.couchbase.lite.Result;
+import com.couchbase.lite.ResultSet;
+import com.couchbase.lite.SelectResult;
+import com.example.ydd.common.lite.common.CDLFactory;
 import com.example.ydd.common.tools.Util;
 import com.example.ydd.dcb.R;
+import com.example.ydd.dcb.application.MainApplication;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private PopupWindow popWindow;
 
-    private List<Dictionary> dictionaries;
 
+    private List<Result> resultList;
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
     private TabLayout tabLayout;
-    private List<String> title = new ArrayList<>();
 
+    LinearLayout relativeLayout;
+    View productListView;
+    RecyclerView recyclerView;
+    GridLayoutManager layoutManager;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mViewPager = findViewById(R.id.container);
-        tabLayout = findViewById(R.id.tablayout);
+        initDate();
 
-        dictionaries = QueryWithMultipleConditional.getInstance()
-                .addConditional("className", "Area").generate();
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        for (int i = 0; i < dictionaries.size(); i++) {
-            title.add(dictionaries.get(i).getString("id"));
-            tabLayout.getTabAt(i).setText(title.get(i));
-        }
 
         findViewById(R.id.jump).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,24 +72,73 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void initDate() {
+
+        TextView nameTv = findViewById(R.id.name_tv);
+
+        Document name = CDLFactory.getInstance().getDocument(((MainApplication) getApplicationContext()).getEmployeeId());
+
+        if (name != null) {
+
+            nameTv.setText(name.getString("username"));
+        }
+
+        relativeLayout = findViewById(R.id.title_rl);
+
+        productListView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popwindow, null);
+
+        recyclerView = productListView.findViewById(R.id.pop_rcv);
+
+        layoutManager = new GridLayoutManager(getApplicationContext(), 5);
+
+        mViewPager = findViewById(R.id.container);
+
+        tabLayout = findViewById(R.id.tablayout);
+
+        Query query = QueryBuilder.select(SelectResult.expression(Meta.id),
+                SelectResult.property("name")).from(DataSource.database(CDLFactory.getInstance().getDatabase()))
+                .where(Expression.property("className").equalTo(Expression.string("Area")));
+
+        ResultSet results = null;
+        try {
+            results = query.execute();
+
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+
+        resultList = results.allResults();
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        tabLayout.setupWithViewPager(mViewPager);
+
+        for (int i = 0; i < resultList.size(); i++) {
+
+            tabLayout.getTabAt(i).setText(resultList.get(i).getString("name"));
+
+            // Log.e("DOAING", resultList.get(i).getString("name"));
+        }
+    }
+
     private void createPopWindow() {
 
-        LinearLayout relativeLayout = findViewById(R.id.title_rl);
 
-        View productListView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popwindow, null);
-        popWindow = new PopupWindow(productListView, Util.getScreenWidth(getApplicationContext()), 300, true);
+        if (popWindow == null) {
 
-        RecyclerView recyclerView = productListView.findViewById(R.id.pop_rcv);
+            popWindow = new PopupWindow(productListView, Util.getScreenWidth(getApplicationContext()), Util.getScreenWidth(getApplicationContext()) / 2, true);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(new MoreAdapter());
+            popWindow.setBackgroundDrawable(new BitmapDrawable());
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 4);
-
-        recyclerView.setLayoutManager(layoutManager);
-
-        recyclerView.setAdapter(new MoreAdapter());
+        }
 
         popWindow.showAsDropDown(relativeLayout);
     }
-
 
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -95,13 +151,13 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
 
             return TableFragment
-                    .newInstance(dictionaries.get(position).getString("id"));
+                    .newInstance(resultList.get(position).getString("id"));
         }
 
         @Override
         public int getCount() {
 
-            return dictionaries.size();
+            return resultList.size();
         }
 
     }
@@ -123,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
-            viewHolder.button.setText(title.get(i));
+            viewHolder.button.setText(resultList.get(i).getString("name"));
 
             viewHolder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -132,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                     mViewPager.setCurrentItem(i);
                     tabLayout.getTabAt(i).select();
                     popWindow.dismiss();
+                    popWindow = null;
 
                 }
             });
@@ -140,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return dictionaries.size();
+            return resultList.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -149,6 +206,13 @@ public class MainActivity extends AppCompatActivity {
             ViewHolder(View itemView) {
                 super(itemView);
                 button = itemView.findViewById(R.id.area_bt);
+
+                ViewGroup.LayoutParams layoutParams = button.getLayoutParams();
+
+                layoutParams.width = Util.getScreenWidth(getApplicationContext()) / 6;
+                layoutParams.height = layoutParams.width;
+
+                button.setLayoutParams(layoutParams);
             }
         }
 

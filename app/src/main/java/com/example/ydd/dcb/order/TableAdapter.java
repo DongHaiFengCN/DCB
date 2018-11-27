@@ -1,7 +1,7 @@
 package com.example.ydd.dcb.order;
 
-import android.content.Context;
 import android.graphics.Color;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -13,13 +13,10 @@ import android.widget.TextView;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
-import com.couchbase.lite.Document;
 import com.couchbase.lite.Expression;
 import com.couchbase.lite.ListenerToken;
 import com.couchbase.lite.Meta;
 import com.couchbase.lite.MutableDocument;
-import com.couchbase.lite.OrderBy;
-import com.couchbase.lite.Ordering;
 import com.couchbase.lite.Ordering.SortOrder;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
@@ -31,9 +28,9 @@ import com.example.ydd.common.lite.common.CDLFactory;
 import com.example.ydd.dcb.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+
+import static com.example.ydd.dcb.application.MainApplication.playSound;
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> {
 
@@ -41,6 +38,13 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     private ListenerToken listenerToken;
     private Query query;
     private List<Result> mData = new ArrayList<>();
+
+    private Vibrator vibrator;
+
+    public TableAdapter(Vibrator vibrator){
+
+        this.vibrator = vibrator;
+    }
 
 
     @NonNull
@@ -69,9 +73,11 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
         }
         viewHolder.mText.setText("状态 " + mData.get(i).getInt("state") + "\n 桌号：" + mData.get(i).getInt("serialNumber"));
-        viewHolder.mText.setOnClickListener(new View.OnClickListener() {
+        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                playSound();
 
                 //TODO 这里网络访问获取服务器的餐桌的状态，保证数据唯一
 
@@ -95,6 +101,19 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
             }
         });
+
+        viewHolder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.e("DOAING","12344");
+
+
+                vibrator.vibrate(300);
+
+                return true;
+            }
+        });
+
 
     }
 

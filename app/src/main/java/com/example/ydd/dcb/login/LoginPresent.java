@@ -85,15 +85,8 @@ public class LoginPresent {
             return;
         }
 
-/*
-        CDLFactory.getInstance().deleteDocument("MsgTable.2b8f5a21-b100-4ff7-a8f2-f4413a6d3794");
-        CDLFactory.getInstance().deleteDocument("MsgTable.4aa1452e-0a1c-4640-8f80-ec914fb210a5");
-        CDLFactory.getInstance().deleteDocument("MsgTable.4b531718-d8f7-4487-abd1-db35eb7a34a8");
-        CDLFactory.getInstance().deleteDocument("MsgTable.abfcce56-70be-4279-8510-0c83b6e5395c");
-        CDLFactory.getInstance().deleteDocument("MsgTable.dc1fa359-d883-4e3b-9985-19d91fbc0d10");
-        CDLFactory.getInstance().deleteDocument("MsgTable.e9860ca8-f1cb-413a-ab8f-2b0d68c28fcc");
-        CDLFactory.getInstance().deleteDocument("MsgTable.f9709928-ebd1-4440-999c-1e0020e65c15");
-      */  List<Dictionary> dictionaries;
+        List<Dictionary> dictionaries;
+
 
         if (Util.isPhoneNumber(msg)) {
 
@@ -109,18 +102,19 @@ public class LoginPresent {
             dictionaries = QueryWithMultipleConditional
                     .getInstance()
                     .addConditional("className", "Employee")
-                    .addConditional("userName", msg)
+                    .addConditional("username", msg)
                     .addConditional("pwd", password)
                     .generate();
         }
 
 
-        Log.e("DOAING", dictionaries.size() + "");
-
         if (dictionaries.size() > 0) {
 
 
             loginView.success(dictionaries.get(0).getString("id"));
+        } else {
+
+            loginView.setMsg("未找到当前用户！", COMMON_MSG);
         }
 
     }
@@ -198,8 +192,6 @@ public class LoginPresent {
         if (BIND_DEVICE_RESPONSE_SUCCESS.equals(bindDeviceResponse.getStatus())) {
 
             String channel = bindDeviceResponse.getData().getChannelId();
-
-            Log.e("DOAING",channel);
 
             initLocalConfig(psw, mobile, channel);
 

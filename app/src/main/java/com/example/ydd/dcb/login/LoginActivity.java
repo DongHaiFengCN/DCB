@@ -1,6 +1,5 @@
 package com.example.ydd.dcb.login;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -8,43 +7,52 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.MutableDocument;
 import com.example.ydd.common.lite.common.CDLFactory;
+import com.example.ydd.common.lite.query.QueryWithMultipleConditional;
 import com.example.ydd.common.tools.Util;
 import com.example.ydd.dcb.R;
 import com.example.ydd.dcb.application.MainApplication;
-
 import com.example.ydd.dcb.order.MainActivity;
 
-import java.util.UUID;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.List;
 
+import static com.example.ydd.dcb.application.MainApplication.playSound;
+import static com.example.ydd.dcb.login.LoginPresent.COMMON_MSG;
 import static com.example.ydd.dcb.login.LoginPresent.CONFIG_STATUS;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
-
     private LoginPresent loginPresent;
 
-    private EditText nameEt;
-
     private EditText passwordEt;
-
-    private Button submitBt;
-
-    private CheckBox rememberCk;
 
     private ProgressBar progressBar;
 
@@ -53,29 +61,28 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     private String adminPassword;
 
     private MainApplication mp;
-    private SharedPreferences preferences;
 
-    private static int sum = 0;
+    private MyGallery myGallery;
+
+
+    int width;
+
+    int tabWidth;
+
+    int marginWidth;
+
+    int marginHeight;
+
+    List<Button> buttonList = new ArrayList<>(12);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        initView();
         mp = (MainApplication) getApplicationContext();
 
         //获取文件读写权限
         Util.checkPermission(this);
-
-        loginPresent = new LoginPresent(this);
-
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
 
         if (MainApplication.configurationExist) {
 
@@ -83,8 +90,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                     .startReplicator(Util.getVerifyConfiguration(getApplicationContext()));
 
         }
-
-
         //获取同步监听
         CDLFactory.getInstance().setLoginChangerListener(new CDLFactory.LoginChangerListener() {
             @Override
@@ -109,110 +114,34 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
                     progressBar.setVisibility(View.INVISIBLE);
 
-                }
-            }
-
-        });
-
-        submitBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                loginPresent.submit(nameEt.getText().toString()
-                        , passwordEt.getText().toString());
-
-            }
-        });
-
-        rememberCk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = preferences.edit();
-
-                if (isChecked) {
-
-                    editor.putString("name", nameEt.getText().toString());
-                    editor.putString("paw", passwordEt.getText().toString());
-                    editor.putBoolean("isCk", isChecked);
-
-                    editor.apply();
-
-                } else {
-
-                    editor.clear();
-                    editor.commit();
+                    onStart();
 
                 }
-
             }
+
         });
 
+        loginPresent = new LoginPresent(this);
 
-        findViewById(R.id.re_bt).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+        initView();
 
 
-         /*       MutableDocument mutableDocument = new MutableDocument("Area."+UUID.randomUUID().toString());
-
-                mutableDocument.setString("channelId","e310cfc1");
-
-                mutableDocument.setString("className","Area");
-
-                mutableDocument.setString("name","测试房间3");
-
-                CDLFactory.getInstance().saveDocument(mutableDocument);
+    }
 
 
-                MutableDocument mutableDocument1 = new MutableDocument("Area."+UUID.randomUUID().toString());
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-                mutableDocument1.setString("channelId","e310cfc1");
+        if(MainApplication.configurationExist){
+            List<com.couchbase.lite.Dictionary> list = QueryWithMultipleConditional.getInstance()
+                    .addConditional("className", "Employee").generate();
 
-                mutableDocument1.setString("className","Area");
-
-                mutableDocument1.setString("name","测试房间4");
-
-                CDLFactory.getInstance().saveDocument(mutableDocument1);
-
-
-                MutableDocument mutableDocument2 = new MutableDocument("Area."+UUID.randomUUID().toString());
-
-                mutableDocument2.setString("channelId","e310cfc1");
-
-                mutableDocument2.setString("className","Area");
-
-                mutableDocument2.setString("name","测试房间5");
-
-                CDLFactory.getInstance().saveDocument(mutableDocument2);
+            myGallery.setData(list);
+        }
 
 
 
-                MutableDocument mutableDocument3 = new MutableDocument("Area."+UUID.randomUUID().toString());
-
-                mutableDocument3.setString("channelId","e310cfc1");
-
-                mutableDocument3.setString("className","Area");
-
-                mutableDocument3.setString("name","测试房间6");
-
-                CDLFactory.getInstance().saveDocument(mutableDocument3);
-
-
-                MutableDocument mutableDocument4 = new MutableDocument("Area."+UUID.randomUUID().toString());
-
-                mutableDocument4.setString("channelId","e310cfc1");
-
-                mutableDocument4.setString("className","Area");
-
-                mutableDocument4.setString("name","测试房间7");
-
-                CDLFactory.getInstance().saveDocument(mutableDocument4);*/
-
-
-            }
-        });
 
     }
 
@@ -247,7 +176,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         //解绑监听
         CDLFactory.getInstance().setLoginChangerListener(null);
 
-
     }
 
 
@@ -264,10 +192,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         switch (type) {
 
             case LoginPresent.NAME_STATUS_FAIL:
-                nameEt.setError(msg);
+                // nameEt.setError(msg);
 
                 break;
             case LoginPresent.PASSWORD_STATUS:
+
                 passwordEt.setError(msg);
 
                 break;
@@ -282,6 +211,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
                             }
                         }).show();
+
+                break;
+            case LoginPresent.COMMON_MSG:
+
+                Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_LONG).show();
 
                 break;
             default:
@@ -342,6 +276,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+
+        finish();
     }
 
 
@@ -350,25 +286,141 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
      */
     private void initView() {
 
-        preferences = getApplicationContext()
-                .getSharedPreferences("LoginInfo", Context.MODE_PRIVATE);
 
-        nameEt = findViewById(R.id.name_et);
+        width = Util.getScreenWidth(getApplicationContext());
+
+        tabWidth = (width / 6);
+
+        marginWidth = width / 13;
+
+        marginHeight = width / 26;
+
+
+        myGallery = findViewById(R.id.list_item);
+
+        LinearLayout.LayoutParams l = (LinearLayout.LayoutParams) myGallery.getLayoutParams();
+
+        l.width = tabWidth * 3 + marginWidth * 2;
+
+        myGallery.setLayoutParams(l);
+
+
         passwordEt = findViewById(R.id.password_et);
-        submitBt = findViewById(R.id.submit_bt);
-        rememberCk = findViewById(R.id.remember_ck);
+
+        disableShowInput(passwordEt);
+
         progressBar = findViewById(R.id.progress_bar);
 
-        String name = preferences.getString("name", "");
-        String paw = preferences.getString("paw", "");
-        Boolean isCheck = preferences.getBoolean("isCk", false);
+        passwordEt.setSelection(passwordEt.length(), passwordEt.length());
 
-        rememberCk.setChecked(isCheck);
-        nameEt.setText(name);
-        passwordEt.setText(paw);
+        LinearLayout.LayoutParams etLayoutParams = (LinearLayout.LayoutParams) passwordEt.getLayoutParams();
+
+        etLayoutParams.width = tabWidth * 3 + marginWidth * 2;
+
+        passwordEt.setLayoutParams(etLayoutParams);
+        buttonList.add((Button) findViewById(R.id.zero));
+        buttonList.add((Button) findViewById(R.id.one));
+        buttonList.add((Button) findViewById(R.id.two));
+        buttonList.add((Button) findViewById(R.id.three));
+        buttonList.add((Button) findViewById(R.id.four));
+        buttonList.add((Button) findViewById(R.id.five));
+        buttonList.add((Button) findViewById(R.id.six));
+        buttonList.add((Button) findViewById(R.id.seven));
+        buttonList.add((Button) findViewById(R.id.eight));
+        buttonList.add((Button) findViewById(R.id.nine));
+        buttonList.add((Button) findViewById(R.id.delete));
+        buttonList.add((Button) findViewById(R.id.submit));
+
+        TableRow row1 = findViewById(R.id.r1);
+        TableLayout.LayoutParams row1LayoutParams = (TableLayout.LayoutParams) row1.getLayoutParams();
+        row1LayoutParams.topMargin = marginHeight;
+        row1.setLayoutParams(row1LayoutParams);
+
+        TableRow row2 = findViewById(R.id.r2);
+        TableLayout.LayoutParams row2LayoutParams = (TableLayout.LayoutParams) row2.getLayoutParams();
+        row2LayoutParams.topMargin = marginHeight;
+        row2.setLayoutParams(row2LayoutParams);
+
+        TableRow row3 = findViewById(R.id.r3);
+        TableLayout.LayoutParams row3LayoutParams = (TableLayout.LayoutParams) row3.getLayoutParams();
+        row3LayoutParams.topMargin = marginHeight;
+        row3.setLayoutParams(row3LayoutParams);
+
+        Button button;
+
+        String tag;
+
+        for (int i = 0; i < 12; i++) {
+
+            button = buttonList.get(i);
+
+            TableRow.LayoutParams layoutParams = (TableRow.LayoutParams) button.getLayoutParams();
+
+            layoutParams.width = tabWidth;
+            layoutParams.height = tabWidth;
+
+            tag = (String) button.getTag();
+
+            if (tag != null && tag.equals("0")) {
+                layoutParams.rightMargin = marginWidth;
 
 
+            } else if (tag != null && tag.equals("1")) {
+                layoutParams.leftMargin = marginWidth;
+
+            }
+
+            button.setLayoutParams(layoutParams);
+
+            final int finalI = i;
+
+            final Button finalButton = button;
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    playSound();
+                    int index = passwordEt.getSelectionStart();
+                    Editable editable = passwordEt.getText();
+
+                    if (finalI == 10) {
+
+                        if (index > 0) {
+                            editable.delete(index - 1, index);
+                        }
+
+                    } else if (finalI == 11) {
+
+                        String name = myGallery.getName();
+                        if (name == null) {
+                            setMsg("未选择用户", COMMON_MSG);
+                            return;
+                        }
+                        loginPresent.submit(name
+                                , passwordEt.getText().toString());
+                    } else {
+
+                        editable.insert(index, finalButton.getText());
+
+                    }
+                }
+            });
+
+            if (i == 10) {
+
+                button.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        playSound();
+                        passwordEt.setText("");
+
+                        return true;
+                    }
+                });
+            }
+        }
     }
+
 
     /**
      * 触发绑定设备的方法，这里可以是打开摄像头扫描二维码
@@ -410,4 +462,27 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                 });
     }
 
+    public void disableShowInput(final EditText editText) {
+
+        if (android.os.Build.VERSION.SDK_INT <= 10) {
+            editText.setInputType(InputType.TYPE_NULL);
+        } else {
+            Class<EditText> cls = EditText.class;
+            Method method;
+            try {
+                method = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
+                method.setAccessible(true);
+                method.invoke(editText, false);
+            } catch (Exception e) {//TODO: handle exception
+            }
+            try {
+                method = cls.getMethod("setSoftInputShownOnFocus", boolean.class);
+                method.setAccessible(true);
+                method.invoke(editText, false);
+            } catch (Exception e) {//TODO: handle exception
+            }
+        }
+    }
+
 }
+

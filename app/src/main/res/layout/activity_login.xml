@@ -1,73 +1,222 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/email_login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical">
+
     <ProgressBar
         android:id="@+id/progress_bar"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
         style="?android:attr/progressBarStyleHorizontal"
-        android:visibility="invisible"
-        android:layout_gravity="center"/>
-
-
-    <EditText
-        android:id="@+id/name_et"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:drawablePadding="@dimen/padding_16"
-        android:inputType="phone"
-        android:maxLength="11"
-        android:maxLines="1"
-        android:text="15688882487"
-        android:hint="@string/login_name"
-        android:paddingLeft="@dimen/padding_16"
-        android:paddingRight="@dimen/padding_16"
-        android:singleLine="true" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
+    <com.example.ydd.dcb.login.MyGallery
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_item" />
+
     <EditText
         android:id="@+id/password_et"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:drawablePadding="@dimen/padding_16"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="@dimen/margin_16"
+        android:textColor="@color/grey_color1"
+        android:gravity="center"
         android:hint="@string/login_paw"
+        android:layout_marginTop="@dimen/margin_16"
         android:imeActionId="6"
-        android:text="123456"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
         android:maxLength="16"
         android:maxLines="1"
-        android:paddingLeft="@dimen/padding_16"
-        android:paddingRight="@dimen/padding_16"
-        android:singleLine="true" />
+        android:textSize="@dimen/sp24"
+        android:singleLine="true"
+        android:text="" />
 
-    <CheckBox
-        android:id="@+id/remember_ck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_16"
-        android:layout_marginTop="@dimen/margin_8"
-        android:gravity="center"
-        android:text="@string/login_remember" />
-
-    <Button
-        android:id="@+id/submit_bt"
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_8"
-        android:layout_marginTop="@dimen/margin_8"
-        android:layout_marginRight="@dimen/margin_8"
-        android:text="登录"
-        android:textStyle="bold" />
+        android:layout_height="0dp"
+        android:layout_weight="2.5"
 
-    <Button
-        android:id="@+id/re_bt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_8"
-        android:layout_marginTop="@dimen/margin_8"
-        android:layout_marginRight="@dimen/margin_8"
-        android:text="注册"
+        >
 
-        android:textStyle="bold" />
+        <TableRow
+            android:id="@+id/r0"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+
+            >
+
+            <Button
+                android:id="@+id/one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/number_key"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textColor="@color/white"
+
+                android:textSize="@dimen/sp24"
+                android:tag="0"
+                android:text="1" />
+
+            <Button
+                android:id="@+id/two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/number_key"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textSize="@dimen/sp24"
+                android:textColor="@color/white"
+
+                android:text="2" />
+
+            <Button
+                android:id="@+id/three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/number_key"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textSize="@dimen/sp24"
+
+                android:textColor="@color/white"
+
+                android:tag="1"
+                android:text="3" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/r1"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+
+            >
+
+            <Button
+                android:id="@+id/four"
+                android:layout_width="wrap_content"
+                android:background="@drawable/number_key"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textSize="@dimen/sp24"
+                android:textColor="@color/white"
+
+                android:layout_height="wrap_content"
+                android:tag="0"
+                android:text="4" />
+
+            <Button
+                android:id="@+id/five"
+                android:background="@drawable/number_key"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textSize="@dimen/sp24"
+                android:textColor="@color/white"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5" />
+
+            <Button
+                android:id="@+id/six"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tag="1"
+                android:background="@drawable/number_key"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textSize="@dimen/sp24"
+                android:textColor="@color/white"
+
+                android:text="6" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/r2"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+
+            >
+
+            <Button
+                android:id="@+id/seven"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/number_key"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textSize="@dimen/sp24"
+
+                android:textColor="@color/white"
+                android:tag="0"
+                android:text="7" />
+
+            <Button
+                android:id="@+id/eight"
+                android:background="@drawable/number_key"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textSize="@dimen/sp24"
+                android:textColor="@color/white"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8" />
+
+            <Button
+                android:id="@+id/nine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/number_key"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textSize="@dimen/sp24"
+                android:textColor="@color/white"
+
+                android:tag="1"
+                android:text="9" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/r3"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+
+            >
+
+            <Button
+                android:id="@+id/delete"
+                android:background="@drawable/delet_button"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textSize="@dimen/sp24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:tag="0"
+                android:text="✘" />
+
+            <Button
+                android:id="@+id/zero"
+                android:background="@drawable/number_key"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textColor="@color/white"
+
+                android:textSize="@dimen/sp24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+            <Button
+                android:id="@+id/submit"
+                android:background="@drawable/submit_button"
+                android:layout_marginBottom="@dimen/dp8"
+                android:textSize="@dimen/sp24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:tag="1"
+                android:text="✔" />
+
+        </TableRow>
+
+    </TableLayout>
 </LinearLayout>
