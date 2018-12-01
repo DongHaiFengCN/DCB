@@ -1,5 +1,7 @@
 package com.example.ydd.dcb.order;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,13 +22,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
-import com.couchbase.lite.Document;
 import com.couchbase.lite.Expression;
 import com.couchbase.lite.Meta;
+import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
 import com.couchbase.lite.Result;
@@ -34,15 +36,22 @@ import com.couchbase.lite.SelectResult;
 import com.example.ydd.common.lite.common.CDLFactory;
 import com.example.ydd.common.tools.Util;
 import com.example.ydd.dcb.R;
-import com.example.ydd.dcb.application.MainApplication;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+
+import static com.example.ydd.dcb.application.MainApplication.playSound;
+
 
 public class MainActivity extends AppCompatActivity {
     private PopupWindow popWindow;
 
 
     private List<Result> resultList;
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
@@ -58,9 +67,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        EventBus.getDefault().register(this);
         initDate();
-
 
         findViewById(R.id.jump).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,17 +81,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(String event) {
+
+        Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+        intent.putExtra("TableId",event);
+
+        startActivity(intent);
+
+
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFreeEvent(final MutableDocument event) {
+
+        playSound();
+
+        new AlertDialog.Builder(this).setTitle(" 桌号："+event.getInt("serialNumber")).setPositiveButton("消台", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                playSound();
+                event.setInt("state", 0);
+                event.setInt("currentRepastTotal",0);
+                event.setLong("startTime",0);
+                CDLFactory.getInstance().saveDocument(event);
+
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                playSound();
+            }
+        }).show();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void initDate() {
-
-        TextView nameTv = findViewById(R.id.name_tv);
-
-        Document name = CDLFactory.getInstance().getDocument(((MainApplication) getApplicationContext()).getEmployeeId());
-
-        if (name != null) {
-
-            nameTv.setText(name.getString("username"));
-        }
 
         relativeLayout = findViewById(R.id.title_rl);
 
@@ -121,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
 
             tabLayout.getTabAt(i).setText(resultList.get(i).getString("name"));
 
-            // Log.e("DOAING", resultList.get(i).getString("name"));
         }
+
     }
 
     private void createPopWindow() {
@@ -205,11 +247,13 @@ public class MainActivity extends AppCompatActivity {
 
             ViewHolder(View itemView) {
                 super(itemView);
+
                 button = itemView.findViewById(R.id.area_bt);
 
                 ViewGroup.LayoutParams layoutParams = button.getLayoutParams();
 
                 layoutParams.width = Util.getScreenWidth(getApplicationContext()) / 6;
+
                 layoutParams.height = layoutParams.width;
 
                 button.setLayoutParams(layoutParams);
@@ -217,4 +261,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
 }

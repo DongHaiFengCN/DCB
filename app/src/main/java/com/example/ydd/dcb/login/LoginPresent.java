@@ -87,25 +87,14 @@ public class LoginPresent {
 
         List<Dictionary> dictionaries;
 
+        dictionaries = QueryWithMultipleConditional
+                .getInstance()
+                .addConditional("className", "Employee")
+                .addConditional("username", msg)
+                .addConditional("pwd", password)
+                .generate();
 
-        if (Util.isPhoneNumber(msg)) {
-
-
-            dictionaries = QueryWithMultipleConditional.getInstance()
-                    .addConditional("className", "Employee")
-                    .addConditional("mobile", msg)
-                    .addConditional("pwd", password)
-                    .generate();
-        } else {
-
-
-            dictionaries = QueryWithMultipleConditional
-                    .getInstance()
-                    .addConditional("className", "Employee")
-                    .addConditional("username", msg)
-                    .addConditional("pwd", password)
-                    .generate();
-        }
+        Log.e("DOAING", msg + "   "+password);
 
 
         if (dictionaries.size() > 0) {
@@ -114,7 +103,7 @@ public class LoginPresent {
             loginView.success(dictionaries.get(0).getString("id"));
         } else {
 
-            loginView.setMsg("未找到当前用户！", COMMON_MSG);
+            loginView.setMsg("密码错误请重试！", COMMON_MSG);
         }
 
     }

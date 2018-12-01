@@ -1,29 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/table_ll"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@color/colorPrimary"
+    android:layout_height="120dp"
+    android:padding="@dimen/margin_6"
+    android:layout_gravity="center"
+    android:orientation="vertical">
 
-    app:cardElevation="@dimen/dp_6"
-    android:id="@+id/card_cv"
-    app:cardCornerRadius="8dp"
-    android:layout_margin="8dp"
-    android:layout_height="90dp">
+<LinearLayout
+    android:id="@+id/title_state_ll"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:background="@drawable/card_free"
+    android:orientation="horizontal"
+    >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+    <TextView
+        android:id="@+id/tName_tv"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="001"
+        android:textSize="@dimen/sp20"
+        android:textStyle="bold"
+        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/tAmount_tv"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="0/6"
+        android:textSize="@dimen/sp18"
+        android:layout_height="match_parent" />
+</LinearLayout>
+
+<LinearLayout
+
+    android:background="@drawable/card_button"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:weightSum="2"
+    android:layout_height="0dp"
+    android:layout_weight="2">
+
+    <Button
+        android:id="@+id/enable_bt"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:background="@drawable/open_table"
+        android:textColor="@color/grey_color3"
+        android:text="开台"
+        />
+
 
         <TextView
-            android:id="@+id/item_tx"
+            android:id="@+id/content_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_red_400"
             android:gravity="center"
-            android:textColor="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
+            android:textStyle="bold"
+            />
 
 
-</android.support.v7.widget.CardView>
+
+</LinearLayout>
+
+
+
+</LinearLayout>

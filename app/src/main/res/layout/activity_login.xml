@@ -17,6 +17,7 @@
     <com.example.ydd.dcb.login.MyGallery
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:id="@+id/list_item" />
 
     <EditText
@@ -192,7 +193,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:tag="0"
-                android:text="✘" />
+                android:text="删" />
 
             <Button
                 android:id="@+id/zero"
@@ -214,7 +215,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:tag="1"
-                android:text="✔" />
+                android:text="登" />
 
         </TableRow>
 

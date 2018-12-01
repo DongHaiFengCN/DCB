@@ -32,6 +32,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.couchbase.lite.MutableDocument;
 import com.example.ydd.common.lite.common.CDLFactory;
 import com.example.ydd.common.lite.query.QueryWithMultipleConditional;
 import com.example.ydd.common.tools.Util;
@@ -43,6 +44,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.List;
+import java.util.UUID;
 
 import static com.example.ydd.dcb.application.MainApplication.playSound;
 import static com.example.ydd.dcb.login.LoginPresent.COMMON_MSG;
@@ -133,14 +135,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     protected void onStart() {
         super.onStart();
 
-        if(MainApplication.configurationExist){
+        if (MainApplication.configurationExist && myGallery.isFirst()) {
+
             List<com.couchbase.lite.Dictionary> list = QueryWithMultipleConditional.getInstance()
-                    .addConditional("className", "Employee").generate();
+                    .addConditional("className", "Employee").addOrder("username").generate();
 
             myGallery.setData(list);
+
         }
-
-
 
 
     }

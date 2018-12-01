@@ -10,6 +10,7 @@ import com.couchbase.lite.Expression;
 import com.couchbase.lite.From;
 import com.couchbase.lite.Meta;
 import com.couchbase.lite.MutableDictionary;
+import com.couchbase.lite.Ordering;
 import com.couchbase.lite.QueryBuilder;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
@@ -29,6 +30,7 @@ public class QueryWithMultipleConditional extends CBLite {
 
 
     private HashMap<String, Object> hashMap;
+    private Ordering ordering;
 
     public QueryWithMultipleConditional addConditional(String k, Object v) {
 
@@ -38,6 +40,14 @@ public class QueryWithMultipleConditional extends CBLite {
         }
 
         hashMap.put(k, v);
+
+        return this;
+    }
+
+    public QueryWithMultipleConditional addOrder(String key) {
+
+        ordering = Ordering.SortOrder.expression(Expression.property(key))
+                .ascending();
 
         return this;
     }
@@ -59,7 +69,16 @@ public class QueryWithMultipleConditional extends CBLite {
 
             Expression expression = getExpression();
 
-            results = from.where(expression).execute();
+            if (ordering != null) {
+
+                results = from.where(expression).orderBy(ordering).execute();
+
+                ordering = null;
+
+            } else {
+                results = from.where(expression).execute();
+            }
+
 
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
@@ -99,7 +118,7 @@ public class QueryWithMultipleConditional extends CBLite {
             entry = (Map.Entry) entries.next();
 
             expression = expression.and(Expression.property(String.valueOf(entry.getKey()))
-                   .equalTo(Expression.value(entry.getValue())));
+                    .equalTo(Expression.value(entry.getValue())));
 
         }
 

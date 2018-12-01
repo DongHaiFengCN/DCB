@@ -2,20 +2,20 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-   >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/lin"
         android:orientation="vertical"
-        android:gravity="center|bottom"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageView
             android:id="@+id/head_im"
             android:layout_width="55dp"
             android:layout_height="55dp"
+            android:padding="@dimen/margin_4"
+            android:background="@mipmap/h0"
             >
 
         </ImageView>
@@ -23,10 +23,10 @@
         <TextView
             android:id="@+id/text2"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/grey_color2"
-            android:textSize="18sp" />
+            android:textSize="12sp" />
     </LinearLayout>
     </LinearLayout>
 
