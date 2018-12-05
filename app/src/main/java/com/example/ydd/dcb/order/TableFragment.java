@@ -87,7 +87,10 @@ public class TableFragment extends Fragment {
 
     private void startTime() {
 
-        new Thread(new MyRunable(id)).start();
+        Log.e("DOAING", "线程池："+MainActivity.getFixedThreadPool().toString());
+
+        MainActivity.getFixedThreadPool().execute(new MyRunable(id));
+
     }
 
     /**
@@ -126,7 +129,6 @@ public class TableFragment extends Fragment {
 
             while (timerLive) {
 
-
                 resultList = tableAdapter.getTableList();
 
                 if (resultList != null) {
@@ -139,7 +141,6 @@ public class TableFragment extends Fragment {
                         result = resultList.get(i);
 
                         if (result.getInt("state") == 1) {
-
 
                             long D_value = tableAdapter.timer.get(result.getString(0));
 
@@ -157,19 +158,10 @@ public class TableFragment extends Fragment {
                                         tableAdapter.notifyItemChanged(finalI);
                                     }
                                 });
-
-
                             }
-
                         }
-
-
-
                     }
-
-
                 }
-
 
                 try {
                     Thread.sleep(3000);
@@ -183,22 +175,5 @@ public class TableFragment extends Fragment {
         }
     }
 
-    private int getPosition(String id) {
 
-        Result result;
-
-        for (int i = 0; i < tableAdapter.getTableList().size(); i++) {
-
-            result = tableAdapter.getTableList().get(i);
-
-            if (result.getString("id").equals(id)) {
-
-                return i;
-            }
-
-        }
-
-
-        return -1;
-    }
 }

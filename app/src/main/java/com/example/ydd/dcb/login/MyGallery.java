@@ -1,13 +1,10 @@
 package com.example.ydd.dcb.login;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.OrientationHelper;
@@ -21,13 +18,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.ydd.common.tools.Util;
 import com.example.ydd.dcb.R;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
-import java.util.Map;
 
 public class MyGallery extends RecyclerView {
 
@@ -207,7 +201,7 @@ public class MyGallery extends RecyclerView {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-            View view = LayoutInflater.from(context).inflate(R.layout.card, null);
+            View view = LayoutInflater.from(context).inflate(R.layout.login_card, null);
 
             return new ViewHolder(view);
         }

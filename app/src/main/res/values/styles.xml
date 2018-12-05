@@ -20,4 +20,22 @@
     <style name="TabLayoutTextStyle">
         <item name="android:textSize">16sp</item>
     </style>
+    <style name="Button_1_S" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/white</item>
+    </style>
+    <style name="Button_2_S" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/mediumaquamarine</item>
+
+    </style>
+    <style name="Button_3_S" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+    </style>
+    <style name="Button_4_S" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/md_red_500</item>
+    </style>
+
+    <declare-styleable name="key">
+        <attr name="keyName" format="string"/>
+        <attr name="inputType" format="integer"/>
+    </declare-styleable>
 </resources>

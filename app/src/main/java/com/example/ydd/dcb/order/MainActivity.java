@@ -42,6 +42,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.example.ydd.dcb.application.MainApplication.playSound;
 
@@ -62,12 +64,14 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     GridLayoutManager layoutManager;
 
+    static ExecutorService executorService;
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        EventBus.getDefault().register(this);
+
         initDate();
 
         findViewById(R.id.jump).setOnClickListener(new View.OnClickListener() {
@@ -80,12 +84,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(String event) {
 
         Intent intent = new Intent(MainActivity.this, OrderActivity.class);
-        intent.putExtra("TableId",event);
+        intent.putExtra("TableId", event);
 
         startActivity(intent);
 
@@ -98,13 +114,13 @@ public class MainActivity extends AppCompatActivity {
 
         playSound();
 
-        new AlertDialog.Builder(this).setTitle(" 桌号："+event.getInt("serialNumber")).setPositiveButton("消台", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this).setTitle(" 桌号：" + event.getInt("serialNumber")).setPositiveButton("消台", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 playSound();
                 event.setInt("state", 0);
-                event.setInt("currentRepastTotal",0);
-                event.setLong("startTime",0);
+                event.setInt("currentRepastTotal", 0);
+                event.setLong("startTime", 0);
                 CDLFactory.getInstance().saveDocument(event);
 
             }
@@ -121,15 +137,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        EventBus.getDefault().unregister(this);
+    }
+
+    public static ExecutorService getFixedThreadPool() {
+
+        if (executorService == null) {
+
+            executorService = Executors.newFixedThreadPool(3);
+
+        }
+        return executorService;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void initDate() {
 
+
         relativeLayout = findViewById(R.id.title_rl);
 
-        productListView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popwindow, null);
+        productListView = LayoutInflater.from(MainActivity.this).inflate(R.layout.table_pop, null);
 
         recyclerView = productListView.findViewById(R.id.pop_rcv);
 
@@ -211,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.popwindow_item, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.table_pop_item, viewGroup, false);
 
             ViewHolder viewHolder = new ViewHolder(view);
 

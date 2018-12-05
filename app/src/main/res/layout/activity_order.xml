@@ -1,49 +1,516 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".order.OrderActivity">
 
-    <android.support.design.widget.AppBarLayout
+<android.support.v7.widget.CardView
+    android:layout_weight="1"
+    android:layout_height="0dp"
+    app:cardCornerRadius="4dp"
+    android:layout_width="match_parent"
+    android:layout_margin="@dimen/margin_6"
+>
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/order_lv"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/dp4"
+            android:layout_height="0dp">
+
+        </ListView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center|right"
+            android:paddingRight="@dimen/margin_16"
+            android:text="¥ 348"
+            android:textColor="@color/grey_color1"
+            android:textSize="24sp"
+            android:typeface="serif" />
+
+    <!--    <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="32dp">
+
+            <TextView
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="备注："
+                android:gravity="center|left"
+                android:paddingLeft="@dimen/margin_6"
+                android:textColor="@color/grey_color2"
+                android:textSize="@dimen/sp16"
+                />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center|right"
+                android:paddingRight="@dimen/margin_16"
+                android:text="¥ 348"
+                android:textColor="@color/grey_color1"
+                android:textSize="24sp"
+                android:typeface="serif" />
+
+        </LinearLayout>-->
+
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="195dp"
+            tools:context=".MainActivity">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/dishName_tv"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/colorAccent"
+                    android:layout_height="wrap_content" />
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp" />
+            </LinearLayout>
+
+          <!--  <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:inputType="0"
+                    app:keyName="1" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:inputType="0"
+
+                    app:keyName="2" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:inputType="0"
+
+                    app:keyName="3" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:inputType="0"
+
+                    app:keyName="4" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    app:inputType="0"
+
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="5" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:inputType="0"
+
+                    app:keyName="6" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:inputType="0"
+
+                    app:keyName="7" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:inputType="0"
+
+                    app:keyName="8" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:inputType="0"
+
+                    app:keyName="9" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:inputType="0"
+
+                    app:keyName="0" />
+            </LinearLayout>
+-->
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal"
+                android:splitMotionEvents="false"
+              >
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="q"
+                    />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="w" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+
+                    app:keyName="e" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+
+                    app:keyName="r" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="t" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="y" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+
+                    app:keyName="u" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="i" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="o" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="p" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="0dp">
+
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="a"
+                   />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="s" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+
+                    app:keyName="d" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+
+                    app:keyName="f" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="g" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="h" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+
+                    app:keyName="j" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="k" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="l" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="0dp">
+
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"
+                    android:splitMotionEvents="false"
+                    app:keyName="备" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="z" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+
+                    app:keyName="x" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+
+                    app:keyName="c" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="v" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="b" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+
+                    app:keyName="n" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    app:keyName="m" />
+
+                <com.example.ydd.dcb.order.key
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"
+                    android:splitMotionEvents="false"
+                    app:keyName="✕" />
+
+
+            </LinearLayout>
+
+
+        </android.support.constraint.ConstraintLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
             android:orientation="horizontal"
-            >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/table_name_tv"
-                android:layout_width="0dp"
+            <Button
                 android:layout_weight="1"
-                android:gravity="center|left"
-                android:paddingLeft="@dimen/margin_16"
-                android:textSize="@dimen/sp20"
-                android:text="001"
+                android:layout_width="0dp"
+                android:theme="@style/Button_4_S"
+                android:text="换"
                 android:textColor="@color/white"
                 android:layout_height="match_parent" />
-            <TextView
-                android:id="@+id/repast_total_tv"
-                android:layout_width="0dp"
+            <Button
                 android:layout_weight="1"
+                android:layout_width="0dp"
+                android:theme="@style/Button_2_S"
+                android:text="合"
+                android:textColor="@color/white"
                 android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/table_operation_tv"
+            <Button
+                android:id="@id/submit"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent" />
-
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="提交订单"
+                android:textColor="@color/white"
+                android:theme="@style/Button_3_S" />
 
         </LinearLayout>
 
-    </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_order" />
 
-</android.support.design.widget.CoordinatorLayout>
+  <!--          <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/name_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:textSize="@dimen/sp18" />
+
+                <TextView
+                    android:id="@+id/amount_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:textSize="@dimen/sp18" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="修改"
+                    android:textColor="@color/white"
+                    android:theme="@style/Button_3_S" />
+
+            </LinearLayout>-->
+
+    </LinearLayout>
+
+</LinearLayout>
