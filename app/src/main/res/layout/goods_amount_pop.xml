@@ -42,15 +42,6 @@
             android:textColor="@color/black90"
             android:textSize="@dimen/sp24" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/bootstrap_brand_success"
-            android:gravity="center"
-            android:text="忌口"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp24" />
 
     </LinearLayout>
 
@@ -87,15 +78,6 @@
             android:textColor="@color/black90"
             android:textSize="@dimen/sp24" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/bootstrap_brand_success"
-            android:gravity="center"
-            android:text="赠菜"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp24" />
 
     </LinearLayout>
     <LinearLayout
@@ -131,15 +113,6 @@
             android:textColor="@color/black90"
             android:textSize="@dimen/sp24" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/bootstrap_brand_success"
-            android:gravity="center"
-            android:text="退菜"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp24" />
 
     </LinearLayout>
     <LinearLayout
@@ -177,15 +150,6 @@
             android:textColor="@color/black90"
             android:textSize="@dimen/sp24" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/bootstrap_brand_success"
-            android:gravity="center"
-            android:text="移除"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp24" />
 
     </LinearLayout>
 

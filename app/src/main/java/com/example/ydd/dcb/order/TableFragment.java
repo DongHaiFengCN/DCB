@@ -1,3 +1,4 @@
+/*
 package com.example.ydd.dcb.order;
 
 import android.content.Context;
@@ -15,9 +16,13 @@ import android.view.ViewGroup;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.Expression;
+import com.couchbase.lite.ListenerToken;
 import com.couchbase.lite.Meta;
+import com.couchbase.lite.Ordering;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
+import com.couchbase.lite.QueryChange;
+import com.couchbase.lite.QueryChangeListener;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
@@ -28,6 +33,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.VIBRATOR_SERVICE;
@@ -42,17 +48,22 @@ public class TableFragment extends Fragment {
     private String id;
     private TableAdapter tableAdapter;
 
-    private boolean timerLive;
-
+    private List<Result> resultList;
+    private ListenerToken listenerToken;
+    private Query query;
+    private List<Result> mData = new ArrayList<>();
     public TableFragment() {
     }
 
 
-    /**
+    */
+/**
      * Returns a new instance of this fragment for the given section
      * number.
-     */
+     *//*
+
     public static TableFragment newInstance(String id) {
+
         TableFragment fragment = new TableFragment();
         Bundle args = new Bundle();
         args.putString(ARG_SECTION_NUMBER, id);
@@ -65,115 +76,57 @@ public class TableFragment extends Fragment {
         super.onAttach(context);
         id = getArguments().getString(ARG_SECTION_NUMBER);
 
+
     }
 
+
+    public TableAdapter getTableAdapter() {
+        return tableAdapter;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //  EventBus.getDefault().register(this);
+
+        //startListener(id);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        tableAdapter = new TableAdapter();
-        tableAdapter.startListener(id);
+        tableAdapter = new TableAdapter(mData);
+
         recyclerView = rootView.findViewById(R.id.table_rcv);
         recyclerView.setAdapter(tableAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
-        timerLive = true;
 
-        startTime();
         return rootView;
     }
 
-    private void startTime() {
 
-        Log.e("DOAING", "线程池："+MainActivity.getFixedThreadPool().toString());
-
-        MainActivity.getFixedThreadPool().execute(new MyRunable(id));
-
-    }
-
-    /**
+    */
+/**
      * 处理销毁fragment时的操作
-     */
+     *//*
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
-        if (tableAdapter != null) {
+    //    query.removeChangeListener(listenerToken);
 
-            tableAdapter.onDestroy();
+ */
+/*       if (tableAdapter != null) {
 
             tableAdapter = null;
         }
         recyclerView.setAdapter(null);
-        recyclerView = null;
-        timerLive = false;
+        recyclerView = null;*//*
+
+
     }
 
 
-    public class MyRunable implements Runnable {
-
-        String id;
-
-        public MyRunable(String id) {
-
-            this.id = id;
-        }
-
-        @Override
-        public void run() {
 
 
-            List<Result> resultList;
-
-            while (timerLive) {
-
-                resultList = tableAdapter.getTableList();
-
-                if (resultList != null) {
-
-
-                    Result result;
-
-                    for (int i = 0; i < resultList.size(); i++) {
-
-                        result = resultList.get(i);
-
-                        if (result.getInt("state") == 1) {
-
-                            long D_value = tableAdapter.timer.get(result.getString(0));
-
-                            long new_D_value = (System.currentTimeMillis() - result.getLong("startTime")) /60000;
-
-                            if (D_value != new_D_value) {
-
-                                tableAdapter.timer.put(result.getString(0), new_D_value);
-
-                                final int finalI = i;
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        tableAdapter.notifyItemChanged(finalI);
-                                    }
-                                });
-                            }
-                        }
-                    }
-                }
-
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            Log.e("DOAING", "结束： " + id);
-        }
     }
 
 
-}
+*/

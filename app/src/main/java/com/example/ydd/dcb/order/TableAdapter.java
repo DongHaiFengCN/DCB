@@ -18,6 +18,7 @@ import com.couchbase.lite.Expression;
 import com.couchbase.lite.ListenerToken;
 import com.couchbase.lite.Meta;
 import com.couchbase.lite.MutableDocument;
+import com.couchbase.lite.Ordering;
 import com.couchbase.lite.Ordering.SortOrder;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
@@ -37,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import static android.app.Application.getProcessName;
@@ -44,16 +46,17 @@ import static com.example.ydd.dcb.application.MainApplication.playSound;
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> {
 
-    private ListenerToken listenerToken;
-    private Query query;
-    private List<Result> mData = new ArrayList<>();
     private static final int FREES_STATE = 0;
     private static final int USER_STATE = 1;
     private static final int WECHAT_STATE = 2;
     private static final int BOOK_STATE = 3;
+
+
+    private Query query;
+    private ListenerToken listenerToken;
+    private List<Result> mData = new ArrayList<>();
     private List<Result> resultList;
 
-    public HashMap<String, Long> timer = new HashMap<>();
 
     @NonNull
     @Override
@@ -62,16 +65,22 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.table_item, viewGroup, false);
 
         return new ViewHolder(view);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
 
         final int state = mData.get(i).getInt("state");
+
         String id = mData.get(i).getString(0);
+
+        Log.e("DOAING", id + " id");
 
         Document document = CDLFactory.getInstance()
                 .getDocument(id);
+
+        viewHolder.tNameTv.setText(document.getString("name"));
 
         String info = document.getInt("currentRepastTotal") + "/" + document.getInt("maxRepastTotal");
 
@@ -88,22 +97,23 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
         } else if (state == USER_STATE) {
 
             //使用
-
             viewHolder.stateLl.setBackgroundResource(R.drawable.card_use);
             viewHolder.enableBt.setVisibility(View.GONE);
             viewHolder.contentTv.setVisibility(View.VISIBLE);
 
-            if (timer.get(id) == null) {
+            if (MainActivity.timer.get(id) == null) {
 
                 long x = (System.currentTimeMillis() - document.getLong("startTime")) / 60000;
-                viewHolder.contentTv.setText("¥" + document.getString("orderPrice") + "\n" + "就餐时间(分)：" + "\n"+ x);
 
-                timer.put(id, x);
+                viewHolder.contentTv.setText("¥" + document.getDouble("orderPrice") + "\n" + "就餐时间(分)：" + "\n" + x);
+
+                MainActivity.timer.put(id, x);
+
             } else {
-                viewHolder.contentTv.setText("¥" + document.getString("orderPrice") + "\n" + "就餐时间(分)："+ "\n" + timer.get(id));
+
+                viewHolder.contentTv.setText("¥" + document.getDouble("orderPrice") + "\n" + "就餐时间(分)：" + "\n" + MainActivity.timer.get(id));
 
             }
-
 
         } else if (state == WECHAT_STATE) {
             viewHolder.stateLl.setBackgroundResource(R.drawable.card_wechat);
@@ -199,11 +209,9 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
         if (document.getInt("state") == USER_STATE || document.getInt("state") == WECHAT_STATE) {
 
-
             EventBus.getDefault().post(document);
         }
     }
-
 
     @Override
     public long getItemId(int position) {
@@ -216,12 +224,51 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     }
 
 
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
+        LinearLayout tableLl;
+        LinearLayout stateLl;
+        TextView tNameTv;
+        TextView tAmountTv;
+        Button enableBt;
+        TextView contentTv;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            tNameTv = itemView.findViewById(R.id.tName_tv);
+            tAmountTv = itemView.findViewById(R.id.tAmount_tv);
+            enableBt = itemView.findViewById(R.id.enable_bt);
+            stateLl = itemView.findViewById(R.id.title_state_ll);
+            tableLl = itemView.findViewById(R.id.table_ll);
+
+            contentTv = itemView.findViewById(R.id.content_tv);
+
+
+        }
+    }
+
     /**
      * 监听 areaId 所属的table
      *
      * @param areaId
      */
     public void startListener(String areaId) {
+
+        if (areaId == null) {
+            return;
+        }
+
+        if (mData.size() > 0) {
+
+           mData.clear();
+
+           notifyDataSetChanged();
+
+
+        }
+
+
+        removeListenerToken();
 
         query = QueryBuilder.select(
                 SelectResult.expression(Meta.id),
@@ -232,7 +279,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
                 .from(DataSource.database(CDLFactory.getInstance().getDatabase()))
                 .where(Expression.property("areaId")
                         .equalTo(Expression.string(areaId)))
-                .orderBy(SortOrder.expression(Expression.property("serialNumber"))
+                .orderBy(Ordering.SortOrder.expression(Expression.property("serialNumber"))
                         .ascending());
 
         listenerToken = query.addChangeListener(new QueryChangeListener() {
@@ -262,6 +309,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
     private void goChange(Result result) {
 
+
         String id = result.getString("id");
 
         int state = result.getInt("state");
@@ -272,7 +320,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
         int count = 0;
 
-        if (!contains(result) && valid) {//添加新餐桌并排序
+        if (!contains(result) && valid) {
+
+            //添加新餐桌并排序
+            Log.e("DOAING", "不存在");
 
             for (Result old : mData) {
 
@@ -291,10 +342,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
             notifyItemRangeChanged(count, mData.size());
 
-
+            Log.e("DOAING", "mData " + mData.size());
         } else if (contains(result)) {
 
-
+            Log.e("DOAING", "存在");
             for (Result old : mData) {
 
                 if (id.equals(old.getString("id"))) {
@@ -330,56 +381,24 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
     private boolean contains(Result result) {
 
-        for (Result old :
-                mData)
-
+        for (Result old : mData) {
             if (old.getString("id").equals(result.getString("id"))) {
 
                 return true;
             }
+        }
 
         return false;
     }
 
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public void removeListenerToken() {
 
-        LinearLayout tableLl;
-        LinearLayout stateLl;
-        TextView tNameTv;
-        TextView tAmountTv;
-        Button enableBt;
-        TextView contentTv;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            tNameTv = itemView.findViewById(R.id.tName_tv);
-            tAmountTv = itemView.findViewById(R.id.tAmount_tv);
-            enableBt = itemView.findViewById(R.id.enable_bt);
-            stateLl = itemView.findViewById(R.id.title_state_ll);
-            tableLl = itemView.findViewById(R.id.table_ll);
-
-            contentTv = itemView.findViewById(R.id.content_tv);
-
-
+        if (listenerToken != null) {
+            query.removeChangeListener(listenerToken);
         }
-    }
-
-    /**
-     * 移除动态接听
-     */
-    protected void onDestroy() {
-
-        Log.e("DOAING", "onDestroy");
-        query.removeChangeListener(listenerToken);
 
 
     }
-
-
-    public List<Result> getTableList() {
-        return resultList;
-    }
-
 
 }

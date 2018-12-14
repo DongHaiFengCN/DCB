@@ -9,29 +9,38 @@
     android:orientation="horizontal" >
 
     <TextView
-        android:id="@+id/head_tv"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:id="@+id/state_tv"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_margin="@dimen/dp8"
         android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@drawable/in_use_state"
         android:text="退"
         />
     <TextView
+        android:id="@+id/name_tv"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:text="麻辣香锅"
+        android:textColor="@color/black"
         android:gravity="center|left"
+
+
         android:layout_height="match_parent" />
     <TextView
+        android:id="@+id/price_tv"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:text="50"
         android:gravity="center"
+        android:textColor="@color/black"
         android:layout_height="match_parent" />
     <TextView
+        android:id="@+id/total_tv"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:text="X 1"
         android:gravity="center|right"
+        android:textColor="@color/black"
         android:paddingRight="@dimen/margin_8"
         android:layout_height="match_parent" />
 

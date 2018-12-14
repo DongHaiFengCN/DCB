@@ -118,13 +118,13 @@ public class LoginPresent {
 
 
         //如果网络访问获取数据正常，本地保存出问题，则只会触发本地保存方法
-        if (bindDeviceResponse != null && BIND_DEVICE_RESPONSE_SUCCESS.equals(bindDeviceResponse.getMsg())) {
+  /*      if (bindDeviceResponse != null && BIND_DEVICE_RESPONSE_SUCCESS.equals(bindDeviceResponse.getMsg())) {
 
             initLocalConfig(psw, mobile, bindDeviceResponse.getData().getChannelId());
 
             return;
         }
-
+*/
         postBindRequestMsg(mobile, psw);
 
     }
@@ -183,6 +183,8 @@ public class LoginPresent {
             String channel = bindDeviceResponse.getData().getChannelId();
 
             initLocalConfig(psw, mobile, channel);
+
+            Log.e("DOAING",channel);
 
 
         } else {

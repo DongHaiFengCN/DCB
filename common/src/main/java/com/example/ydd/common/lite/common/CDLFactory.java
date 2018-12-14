@@ -11,6 +11,7 @@ import com.couchbase.lite.DatabaseChangeListener;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Endpoint;
+import com.couchbase.lite.ListenerToken;
 import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Replicator;
 import com.couchbase.lite.ReplicatorChange;
@@ -37,6 +38,8 @@ public class CDLFactory {
 
     private static CDLFactory cdlFactory;
 
+    private static ListenerToken listenerToken;
+
     public Database getDatabase() {
 
         return database;
@@ -48,6 +51,7 @@ public class CDLFactory {
 
 
     public void setLoginChangerListener(LoginChangerListener loginChangerListener) {
+
         this.loginChangerListener = loginChangerListener;
     }
 
@@ -56,8 +60,11 @@ public class CDLFactory {
         DatabaseConfiguration config = new DatabaseConfiguration(context.getApplicationContext());
 
         try {
+
             database = new Database("Local_dcb", config);
+
         } catch (CouchbaseLiteException e) {
+
             e.printStackTrace();
         }
 
@@ -72,6 +79,7 @@ public class CDLFactory {
         channels.add(ss[0]);
 
         String adminPsw = ss[1];
+
         String adminName = ss[2];
 
         Endpoint targetEndpoint = null;
@@ -90,7 +98,7 @@ public class CDLFactory {
 
         replicator = new Replicator(replConfig);
 
-        replicator.addChangeListener(new ReplicatorChangeListener() {
+        listenerToken = replicator.addChangeListener(new ReplicatorChangeListener() {
             @Override
             public void changed(ReplicatorChange change) {
 
@@ -108,8 +116,6 @@ public class CDLFactory {
         });
 
         replicator.start();
-        test();
-
     }
 
 
@@ -147,6 +153,7 @@ public class CDLFactory {
             e.printStackTrace();
         }
     }
+
     public void test() {
 
         database.addChangeListener(new DatabaseChangeListener() {
@@ -159,12 +166,6 @@ public class CDLFactory {
                 for (String id : ids) {
 
                     Log.e("DOAING", id);
-
-                  /*  Document document = database.getDocument("id");
-
-                    HashMap hashMap = (HashMap) document.toMap();
-
-                    Log.e("DOAING",hashMap.toString());*/
 
 
                 }

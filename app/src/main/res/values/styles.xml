@@ -24,7 +24,7 @@
         <item name="colorButtonNormal">@color/white</item>
     </style>
     <style name="Button_2_S" parent="Theme.AppCompat.Light">
-        <item name="colorButtonNormal">@color/mediumaquamarine</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
 
     </style>
     <style name="Button_3_S" parent="Theme.AppCompat.Light">
@@ -32,6 +32,10 @@
     </style>
     <style name="Button_4_S" parent="Theme.AppCompat.Light">
         <item name="colorButtonNormal">@color/md_red_500</item>
+    </style>
+
+    <style name="Button_5_S" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/md_blue_grey_500</item>
     </style>
 
     <declare-styleable name="key">

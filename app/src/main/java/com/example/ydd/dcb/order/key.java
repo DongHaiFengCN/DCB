@@ -37,7 +37,7 @@ public class key extends LinearLayout {
 
         final String name = typedArray.getString(R.styleable.key_keyName);
 
-        final Integer type = typedArray.getInteger(R.styleable.key_inputType, -1);
+      //  final Integer type = typedArray.getInteger(R.styleable.key_inputType, -1);
 
         typedArray.recycle();
 
@@ -124,6 +124,7 @@ public class key extends LinearLayout {
                 public boolean onLongClick(View v) {
 
                     EventBus.getDefault().post("delAll");
+
                     return false;
                 }
             });

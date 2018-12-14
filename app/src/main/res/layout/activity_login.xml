@@ -17,7 +17,6 @@
     <com.example.ydd.dcb.login.MyGallery
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:id="@+id/list_item" />
 
     <EditText

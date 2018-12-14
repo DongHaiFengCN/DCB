@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:text="17605413611"
+        android:text="15688882487"
         android:hint="@string/manager_telephone_number"
         android:layout_margin="@dimen/margin_8" />
 
