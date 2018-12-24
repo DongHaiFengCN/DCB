@@ -101,7 +101,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
             viewHolder.enableBt.setVisibility(View.GONE);
             viewHolder.contentTv.setVisibility(View.VISIBLE);
 
-            if (MainActivity.timer.get(id) == null) {
+         /*   if (MainActivity.timer.get(id) == null) {
 
                 long x = (System.currentTimeMillis() - document.getLong("startTime")) / 60000;
 
@@ -111,9 +111,9 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
             } else {
 
-                viewHolder.contentTv.setText("¥" + document.getDouble("orderPrice") + "\n" + "就餐时间(分)：" + "\n" + MainActivity.timer.get(id));
+                viewHolder.contentTv.setText("¥" + document.getDouble("orderPrice") + "\n" + "就餐时间(分)：" + "\n" );
 
-            }
+            }*/
 
         } else if (state == WECHAT_STATE) {
             viewHolder.stateLl.setBackgroundResource(R.drawable.card_wechat);
@@ -314,6 +314,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
         int state = result.getInt("state");
 
+        long serviceTime = result.getLong("serviceTime");
+
         boolean valid = result.getBoolean("valid");
 
         int serialNumber = result.getInt("serialNumber");
@@ -350,7 +352,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
                 if (id.equals(old.getString("id"))) {
 
-                    if (state != old.getInt("state")) {
+                    if (state != old.getInt("state")||serviceTime!=old.getLong("serviceTime")) {
 
                         mData.set(count, result);
 

@@ -7,33 +7,10 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/title_rl"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:background="@color/colorPrimaryDark">
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tablayout"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                app:tabIndicatorColor="@color/snow"
-                app:tabMode="scrollable" />
-
-            <Button
-                android:id="@+id/jump"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:text="≡"
-                android:textSize="24sp"
-                android:textColor="@color/white"
-                android:background="@color/colorPrimary"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true" />
-
-        </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
     <LinearLayout
         android:background="@color/white"
         android:layout_width="match_parent"
@@ -43,24 +20,32 @@
         >
 
         <Button
+            android:id="@+id/y_bt"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="@dimen/margin_16"
             android:background="@drawable/in_use_state"
             android:text="用"
+            android:textSize="@dimen/sp18"
             android:textColor="@color/white" />
         <Button
+            android:id="@+id/k_bt"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/in_free_state"
             android:text="空"
+            android:textSize="@dimen/sp18"
+
             android:layout_marginLeft="@dimen/margin_16"
             android:layout_marginRight="@dimen/margin_8"
             android:textColor="@color/white" />
 
         <Button
+            android:id="@+id/d_bt"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:textSize="@dimen/sp18"
+
             android:background="@drawable/in_book_state"
             android:layout_marginLeft="@dimen/margin_8"
             android:layout_marginRight="@dimen/margin_16"
@@ -68,8 +53,11 @@
             android:textColor="@color/white"
             />
         <Button
+            android:id="@+id/w_bt"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:textSize="@dimen/sp18"
+
             android:background="@drawable/in_wechat_state"
             android:text="微"
             android:textColor="@color/white"

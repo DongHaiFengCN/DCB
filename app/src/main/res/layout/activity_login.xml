@@ -1,222 +1,118 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/email_login_form"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="invisible" />
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
 
-    <com.example.ydd.dcb.login.MyGallery
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/list_item" />
-
-    <EditText
-        android:id="@+id/password_et"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="@dimen/margin_16"
-        android:textColor="@color/grey_color1"
-        android:gravity="center"
-        android:hint="@string/login_paw"
-        android:layout_marginTop="@dimen/margin_16"
-        android:imeActionId="6"
-        android:maxLength="16"
-        android:maxLines="1"
-        android:textSize="@dimen/sp24"
-        android:singleLine="true"
-        android:text="" />
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2.5"
-
-        >
-
-        <TableRow
-            android:id="@+id/r0"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:gravity="center_horizontal"
-
-            >
-
-            <Button
-                android:id="@+id/one"
-                android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right|center"
+            android:layout_height="64dp">
+            <TextView
+                android:id="@+id/head_tv"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:background="@drawable/number_key"
-                android:layout_marginBottom="@dimen/dp8"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:gravity="left"
                 android:textColor="@color/white"
+                android:textSize="@dimen/sp28"
+                android:typeface="sans"
 
-                android:textSize="@dimen/sp24"
-                android:tag="0"
-                android:text="1" />
+                />
+            <ImageView
+                android:id="@+id/sm_iv"
+                android:layout_marginRight="@dimen/margin_16"
+                android:background="@drawable/ic_sm"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
 
-            <Button
-                android:id="@+id/two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/number_key"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textSize="@dimen/sp24"
-                android:textColor="@color/white"
+        </LinearLayout>
 
-                android:text="2" />
-
-            <Button
-                android:id="@+id/three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/number_key"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textSize="@dimen/sp24"
-
-                android:textColor="@color/white"
-
-                android:tag="1"
-                android:text="3" />
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/r1"
+        <android.support.v7.widget.CardView
+            android:layout_margin="@dimen/margin_12"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/dp8"
+            app:cardMaxElevation="@dimen/margin_16"
             android:layout_width="match_parent"
-            android:gravity="center_horizontal"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="242dp">
+                <TextView
+                    android:id="@+id/welcome_tv"
+                    android:typeface="sans"
+                    android:gravity="center"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp24"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp" />
 
-            >
+                <android.support.design.widget.TextInputLayout
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:theme="@style/CustomAppTheme_textinputLayout"
+                    android:layout_marginLeft="@dimen/margin_16"
+                    android:layout_marginRight="@dimen/margin_16"
+                    android:hint="请输入账号">
 
-            <Button
-                android:id="@+id/four"
-                android:layout_width="wrap_content"
-                android:background="@drawable/number_key"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textSize="@dimen/sp24"
-                android:textColor="@color/white"
+                    <android.support.v7.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/name_et"
+                        android:focusable="true"
+                        android:textSize="@dimen/sp18"
+                        android:singleLine="true"
+                        android:completionThreshold="1"
+                        android:drawableRight="@color/white"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp" />
 
-                android:layout_height="wrap_content"
-                android:tag="0"
-                android:text="4" />
+                </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/five"
-                android:background="@drawable/number_key"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textSize="@dimen/sp24"
-                android:textColor="@color/white"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textinputlayout_password"
+                    android:theme="@style/CustomAppTheme_textinputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_marginLeft="@dimen/margin_16"
+                    android:layout_marginRight="@dimen/margin_16"
+                    app:errorEnabled="true"
+                    app:passwordToggleEnabled="true">
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5" />
+                    <EditText
+                        android:id="@+id/password_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="请输入密码"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp18"
+                        android:inputType="textPassword" />
+                </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/six"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:tag="1"
-                android:background="@drawable/number_key"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textSize="@dimen/sp24"
-                android:textColor="@color/white"
+                <Button
+                    android:id="@+id/submit_bt"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="@dimen/margin_16"
+                    android:layout_marginTop="@dimen/dp4"
+                    android:layout_marginRight="@dimen/margin_16"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp20"
+                    android:theme="@style/Button_3_S" />
+            </LinearLayout>
 
-                android:text="6" />
 
-        </TableRow>
+        </android.support.v7.widget.CardView>
 
-        <TableRow
-            android:id="@+id/r2"
-            android:layout_width="match_parent"
-            android:gravity="center_horizontal"
 
-            >
 
-            <Button
-                android:id="@+id/seven"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/number_key"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textSize="@dimen/sp24"
+    </LinearLayout>
 
-                android:textColor="@color/white"
-                android:tag="0"
-                android:text="7" />
 
-            <Button
-                android:id="@+id/eight"
-                android:background="@drawable/number_key"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textSize="@dimen/sp24"
-                android:textColor="@color/white"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="8" />
-
-            <Button
-                android:id="@+id/nine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/number_key"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textSize="@dimen/sp24"
-                android:textColor="@color/white"
-
-                android:tag="1"
-                android:text="9" />
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/r3"
-            android:layout_width="match_parent"
-            android:gravity="center_horizontal"
-
-            >
-
-            <Button
-                android:id="@+id/delete"
-                android:background="@drawable/delet_button"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textSize="@dimen/sp24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:tag="0"
-                android:text="删" />
-
-            <Button
-                android:id="@+id/zero"
-                android:background="@drawable/number_key"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textColor="@color/white"
-
-                android:textSize="@dimen/sp24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0" />
-
-            <Button
-                android:id="@+id/submit"
-                android:background="@drawable/submit_button"
-                android:layout_marginBottom="@dimen/dp8"
-                android:textSize="@dimen/sp24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:tag="1"
-                android:text="登" />
-
-        </TableRow>
-
-    </TableLayout>
-</LinearLayout>

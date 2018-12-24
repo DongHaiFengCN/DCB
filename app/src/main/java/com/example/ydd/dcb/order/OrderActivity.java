@@ -76,7 +76,7 @@ public class OrderActivity extends AppCompatActivity {
 
         orderLv.setAdapter(new MyListViewAdapter());
 
-        submit = findViewById(R.id.submit);
+        submit = findViewById(R.id.submit_bt);
 
         id = getIntent().getStringExtra("TableId");
 

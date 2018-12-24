@@ -18,6 +18,7 @@ import com.couchbase.lite.ReplicatorChange;
 import com.couchbase.lite.ReplicatorChangeListener;
 import com.couchbase.lite.ReplicatorConfiguration;
 import com.couchbase.lite.URLEndpoint;
+import com.example.ydd.common.tools.Util;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,6 +41,8 @@ public class CDLFactory {
 
     private static ListenerToken listenerToken;
 
+    private Context context;
+
     public Database getDatabase() {
 
         return database;
@@ -57,7 +60,9 @@ public class CDLFactory {
 
     public CDLFactory initCouchBaseLite(Context context) {
 
-        DatabaseConfiguration config = new DatabaseConfiguration(context.getApplicationContext());
+        this.context = context.getApplicationContext();
+
+        DatabaseConfiguration config = new DatabaseConfiguration(context);
 
         try {
 
@@ -73,6 +78,8 @@ public class CDLFactory {
 
 
     public void startReplicator(String[] ss) {
+
+        stop();
 
         List<String> channels = new ArrayList<>();
 
@@ -129,6 +136,22 @@ public class CDLFactory {
         return cdlFactory;
     }
 
+    public void stop() {
+
+
+        if (listenerToken != null) {
+            replicator.removeChangeListener(listenerToken);
+        }
+
+
+        if (replicator != null) {
+            replicator.stop();
+        }
+
+    }
+
+
+
     public Document getDocument(String id) {
 
 
@@ -145,14 +168,14 @@ public class CDLFactory {
         }
     }
 
-    public void deleteDocument(String id) {
+/*    public void deleteDocument(String id) {
 
         try {
             database.delete(database.getDocument(id));
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void test() {
 
@@ -176,6 +199,6 @@ public class CDLFactory {
 
     public interface LoginChangerListener {
 
-        void getProgress(Long completed, Long total);
+        void getProgress(long completed, long total);
     }
 }

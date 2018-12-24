@@ -28,7 +28,7 @@
 
     </style>
     <style name="Button_3_S" parent="Theme.AppCompat.Light">
-        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
     </style>
     <style name="Button_4_S" parent="Theme.AppCompat.Light">
         <item name="colorButtonNormal">@color/md_red_500</item>
@@ -42,4 +42,27 @@
         <attr name="keyName" format="string"/>
         <attr name="inputType" format="integer"/>
     </declare-styleable>
+
+
+    <style name="CustomAppTheme_textinputLayout" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:textColorHint">@color/md_grey_500</item>
+        <item name="colorControlNormal">@color/md_grey_500</item>
+        <item name="colorControlActivated">@color/md_grey_500</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+
+
+    <style name="ResultButton" parent="@android:style/Widget.Holo.Button.Borderless.Small">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+    <style name="ShareButton" parent="@android:style/Widget.Holo.Button.Borderless.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

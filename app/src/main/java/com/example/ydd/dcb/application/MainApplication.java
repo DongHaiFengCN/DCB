@@ -2,13 +2,16 @@ package com.example.ydd.dcb.application;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Intent;
 import android.media.SoundPool;
 import android.util.Log;
 
 import com.example.ydd.common.tools.Util;
 import com.example.ydd.common.lite.common.CDLFactory;
 import com.example.ydd.dcb.R;
+import com.example.ydd.dcb.login.CDServer;
 import com.squareup.leakcanary.LeakCanary;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,10 @@ public class MainApplication extends Application {
 
     private String employeeId;
 
+
+
+    static String channelId;
+
     /**
      * 判断配置文件的完整性
      */
@@ -40,10 +47,15 @@ public class MainApplication extends Application {
     private static SoundPool soundPool;//声明一个SoundPool
     private static int soundID;//创建某个声音对应的音频ID
 
+    private static Intent intent;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
+
+        CDLFactory.getInstance()
+                .initCouchBaseLite(getApplicationContext());
         initSound();
 
         //内存溢出监听
@@ -51,6 +63,7 @@ public class MainApplication extends Application {
 
         //首次校验配置文件
         configurationExist = Util.verifyConfiguration(this);
+        //ZXingLibrary.initDisplayOpinion(this);
 
     }
 
@@ -81,4 +94,12 @@ public class MainApplication extends Application {
                 1     //播放速度【1是正常，范围从0~2】
         );
     }
+    public static String getChannelId() {
+        return channelId;
+    }
+
+    public static void setChannelId(String channelId) {
+        MainApplication.channelId = channelId;
+    }
+
 }

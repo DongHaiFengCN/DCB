@@ -47,36 +47,38 @@ import com.couchbase.lite.SelectResult;
 import com.example.ydd.common.lite.common.CDLFactory;
 import com.example.ydd.common.tools.Util;
 import com.example.ydd.dcb.R;
+import com.example.ydd.dcb.application.BaseActivity;
+import com.example.ydd.dcb.login.CDServer;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 import static com.example.ydd.common.tools.Util.fixInputMethodManagerLeak;
 import static com.example.ydd.dcb.application.MainApplication.playSound;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
 
     private PopupWindow popWindow;
 
+    /**
+     * 当前设备的餐桌id与开台时间，轮训的时候去拿当前时间减去开台时间，差值在一分钟内不去更新。
+     */
     public static HashMap<String, Long> timer = new HashMap<>();
 
     private List<Result> resultList;
 
-    //private SectionsPagerAdapter mSectionsPagerAdapter;
-
-
     private TabLayout tabLayout;
-
+    private Button yBt;
+    private Button kBt;
+    private Button dBt;
+    private Button wBt;
     LinearLayout relativeLayout;
     View productListView;
     RecyclerView recyclerView;
@@ -84,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView tableRc;
     GridLayoutManager layoutManager;
     TableAdapter tableAdapter;
-    private boolean timerLive;
+
+    boolean isLive;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -92,17 +95,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        timerLive = true;
 
-        initDate();
+        yBt = findViewById(R.id.y_bt);
+        yBt.setTypeface(getTypeface());
 
-        findViewById(R.id.jump).setOnClickListener(new View.OnClickListener() {
+        kBt = findViewById(R.id.k_bt);
+        kBt.setTypeface(getTypeface());
+
+        dBt = findViewById(R.id.d_bt);
+        dBt.setTypeface(getTypeface());
+
+        wBt = findViewById(R.id.w_bt);
+        wBt.setTypeface(getTypeface());
+
+        // initDate();
+
+  /*      findViewById(R.id.jump).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 createPopWindow();
             }
-        });
+        });*/
 
     }
 
@@ -119,9 +133,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-        Log.e("DOAING", "onStop");
 
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //  tableAdapter.removeListenerToken();
+
+        isLive = false;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -159,20 +180,6 @@ public class MainActivity extends AppCompatActivity {
         }).show();
 
     }
-/*    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void notifyDataChanged(Integer event) {
-
-        tableAdapter.notifyDataSetChanged();
-
-
-    }*/
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        fixInputMethodManagerLeak(this);
-        timerLive = false;
-        tableAdapter.removeListenerToken();
-    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -184,15 +191,15 @@ public class MainActivity extends AppCompatActivity {
         tableRc = findViewById(R.id.table_rcv);
 
 
-        relativeLayout = findViewById(R.id.title_rl);
+       // relativeLayout = findViewById(R.id.title_rl);
 
-        productListView = LayoutInflater.from(MainActivity.this).inflate(R.layout.table_pop, null);
+       // productListView = LayoutInflater.from(MainActivity.this).inflate(R.layout.table_pop, null);
 
         recyclerView = productListView.findViewById(R.id.pop_rcv);
 
         layoutManager = new GridLayoutManager(getApplicationContext(), 5);
 
-        tabLayout = findViewById(R.id.tablayout);
+      //  tabLayout = findViewById(R.id.tablayout);
 
         Query query = QueryBuilder.select(SelectResult.expression(Meta.id),
                 SelectResult.property("name")).from(DataSource.database(CDLFactory.getInstance().getDatabase()))
@@ -221,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
             TabLayout.Tab tab = tabLayout.newTab();
             tabLayout.addTab(tab);
             TextView textView = new TextView(MainActivity.this);
-            textView.setTextColor(getResources().getColorStateList( R.color.tab_text_selector) );
+            textView.setTextColor(getResources().getColorStateList(R.color.tab_text_selector));
             textView.setGravity(Gravity.CENTER);
             textView.setText(resultList.get(i).getString("name"));
             final int finalI = i;
@@ -316,19 +323,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public class MyRunable implements Runnable {
+    public class TimeRunnable implements Runnable {
 
         @Override
         public void run() {
 
+            while (isLive) {
 
-            List<Result> resultList;
-            TableAdapter tableAdapter;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                Log.e("DOAING", "@@@@@@@@@@@@@@@@@@@@@@@");
+
             }
 
 
@@ -388,7 +397,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-
 
                 try {
                     Thread.sleep(3000);

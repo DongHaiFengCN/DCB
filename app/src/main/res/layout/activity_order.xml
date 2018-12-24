@@ -493,7 +493,7 @@
 
         </android.support.constraint.ConstraintLayout>
         <Button
-            android:id="@id/submit"
+            android:id="@+id/submit_bt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="提交订单"
